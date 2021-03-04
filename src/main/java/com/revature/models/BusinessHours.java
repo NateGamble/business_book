@@ -8,28 +8,28 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 
 @Entity
-@Table(name ="posts")
+@Table(name ="business_hours")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Posts {
+public class BusinessHours {
 
     @Id
-    @Column(name="post_id")
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
-    private int postId;
+    @Column(name="hours_id")
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    private int hoursId;
 
     @ManyToOne(targetEntity = Business.class, optional = false)
     @JoinColumn(name = "business_id", columnDefinition = "int4 NOT NULL")
     private Business business;
 
-    @Column(name="post_type", nullable=false)
-    private String postType;
-
     @Column(nullable=false)
-    private String body;
+    private String day;
 
-    @Column(name="created_time", updatable=false, columnDefinition="timestamp default CURRENT_TIMESTAMP")
-    private Timestamp createdTime;
+    @Column(nullable = false)
+    private Timestamp open;
+
+    @Column(nullable = false)
+    private Timestamp closed;
 
 }
