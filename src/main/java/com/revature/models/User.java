@@ -1,6 +1,7 @@
 package com.revature.models;
 
 import com.revature.util.RegexUtil;
+import com.revature.util.UserRoleConverter;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,6 +11,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import java.security.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -22,11 +24,11 @@ public class User {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int userId;
 
-    @NotNull @Length(min=5) @NotEmpty
+//    @NotNull @Length(min=5) @NotEmpty
     @Column(nullable=false, unique=true)
     private String username;
 
-    @Pattern(regexp=RegexUtil.PASSWORD_REGEX)
+    //@Pattern(regexp=RegexUtil.PASSWORD_REGEX)
     @Column(nullable=false)
     private String password;
 
@@ -34,42 +36,30 @@ public class User {
     @Column(nullable=false, unique=true)
     private String email;
 
-    @Column
+    @Column(name="phone_number")
     private String phoneNumber;
 
-    @NotNull @NotEmpty
+//    @NotNull @NotEmpty
     @Column(nullable=false)
     private String firstname;
 
-    @NotNull @NotEmpty
+//    @NotNull @NotEmpty
     @Column(nullable=false)
     private String lastname;
 
     @Column(name="register_datetime", updatable=false, columnDefinition="timestamp default CURRENT_TIMESTAMP")
-    private LocalDateTime registerDatetime;
+    private Timestamp registerDatetime;
 
-    @Enumerated(EnumType.STRING)
-    private Role role;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return userId == user.userId && username.equals(user.username) && password.equals(user.password) && Objects.equals(firstname, user.firstname) && Objects.equals(lastname, user.lastname) && Objects.equals(email, user.email) && Objects.equals(phoneNumber, user.phoneNumber) && registerDatetime.equals(user.registerDatetime);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(userId, username, password, firstname, lastname, email, phoneNumber, registerDatetime);
-    }
+    //?????????????????????????????????????????????????????
+    @Column(name="user_role_id")
+    @Convert(converter = UserRoleConverter.class)
+    private Role roleId;
 
     @Override
     public String toString() {
         return "User{" +
                 "userId=" + userId +
                 ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
                 ", firstname='" + firstname + '\'' +
                 ", lastname='" + lastname + '\'' +
                 ", email='" + email + '\'' +
