@@ -1,97 +1,54 @@
 package com.revature.models;
 
-import java.sql.Timestamp;
-import java.util.Objects;
+import com.revature.util.RegexUtil;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import javax.persistence.*;
+import javax.validation.constraints.Pattern;
+import java.sql.Timestamp;
+
+@Entity
+@Table(name ="business")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Business {
+
+    @Id
+    @Column(name="user_id")
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int id;
-    private int ownerId;
+
+    @ManyToOne(targetEntity = User.class, optional = false)
+    @JoinColumn(name = "owner_id", columnDefinition = "int4 NOT NULL")
+    private User owner;
+
+    @Pattern(regexp= RegexUtil.EMAIL_REGEX)
+    @Column(nullable=false, unique=true)
     private String email;
+
+    @Column(name="business_name", nullable=false)
     private String businessName;
+
+    @Column(nullable=false)
     private String location;
+
+    @Column(name="business_type", nullable=false)
     private String businessType;
+
+    @Column(name="register_datetime", updatable=false, columnDefinition="timestamp default CURRENT_TIMESTAMP")
     private Timestamp registerDatetime;
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public int getOwnerId() {
-        return ownerId;
-    }
-
-    public void setOwnerId(int ownerId) {
-        this.ownerId = ownerId;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getBusinessName() {
-        return businessName;
-    }
-
-    public void setBusinessName(String businessName) {
-        this.businessName = businessName;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
-    public String getBusinessType() {
-        return businessType;
-    }
-
-    public void setBusinessType(String businessType) {
-        this.businessType = businessType;
-    }
-
-    public Timestamp getRegisterDatetime() {
-        return registerDatetime;
-    }
-
-    public void setRegisterDatetime(Timestamp registerDatetime) {
-        this.registerDatetime = registerDatetime;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Business business = (Business) o;
-        return id == business.id &&
-                ownerId == business.ownerId &&
-                Objects.equals(email, business.email) &&
-                Objects.equals(businessName, business.businessName) &&
-                Objects.equals(location, business.location) &&
-                Objects.equals(businessType, business.businessType) &&
-                Objects.equals(registerDatetime, business.registerDatetime);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, ownerId, email, businessName, location, businessType, registerDatetime);
-    }
+    @Column(name="is_active", columnDefinition = "default true")
+    private boolean isActive;
 
     @Override
     public String toString() {
         return "Business{" +
                 "id=" + id +
-                ", ownerId=" + ownerId +
+                ", ownerId=" + owner.getUserId() +
                 ", email='" + email + '\'' +
                 ", businessName='" + businessName + '\'' +
                 ", location='" + location + '\'' +

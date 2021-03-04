@@ -5,15 +5,12 @@ import com.revature.util.UserRoleConverter;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+
 import javax.validation.constraints.Pattern;
 import java.security.Timestamp;
-import java.time.LocalDateTime;
-import java.util.Objects;
+
 
 
 @Entity @Table(name ="app_users")
@@ -41,16 +38,18 @@ public class User {
 
 //    @NotNull @NotEmpty
     @Column(nullable=false)
-    private String firstname;
+    private String firstName;
 
 //    @NotNull @NotEmpty
     @Column(nullable=false)
-    private String lastname;
+    private String lastName;
 
     @Column(name="register_datetime", updatable=false, columnDefinition="timestamp default CURRENT_TIMESTAMP")
     private Timestamp registerDatetime;
 
-    //?????????????????????????????????????????????????????
+    @Column(name="is_active", columnDefinition = "default true")
+    private boolean isActive;
+
     @Column(name="user_role_id")
     @Convert(converter = UserRoleConverter.class)
     private Role roleId;
@@ -60,8 +59,8 @@ public class User {
         return "User{" +
                 "userId=" + userId +
                 ", username='" + username + '\'' +
-                ", firstname='" + firstname + '\'' +
-                ", lastname='" + lastname + '\'' +
+                ", firstname='" + firstName + '\'' +
+                ", lastname='" + lastName + '\'' +
                 ", email='" + email + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", registerDatetime=" + registerDatetime +
