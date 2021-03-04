@@ -28,24 +28,13 @@ create table app_users (
 	lastname varchar(25) not null,
 	register_datetime timestamp default localtimestamp,
 	user_role_id int,
+	is_active boolean,
 	
 	constraint app_users_pk
 	primary key (user_id),
 	
 	constraint app_user_role_fk
 	foreign key (user_role_id) references user_roles
-);
-
-create table user_status (
-	user_id int,
-	is_active boolean default true,
-	
-	constraint user_status_app_users_pk
-	primary key (user_id),
-	
-	constraint user_status_app_users_fk
-	foreign key (user_id)
-	references app_users
 );
 
 insert into user_roles (name) values
@@ -61,6 +50,7 @@ create table business (
 	location varchar(100) not null,
 	business_type varchar,
 	register_datetime timestamp default localtimestamp,
+	is_active boolean,
 	
 	constraint business_pk
 	primary key (business_id),
@@ -83,18 +73,6 @@ create table posts (
   constraint posts_business_fk
   foreign key (business_id)
   references business
-);
-
-create table business_status (
-	business_id int,
-	is_active boolean default true,
-	
-	constraint business_status_pk
-	primary key (business_id),
-	
-	constraint business_status_business_fk
-	foreign key (business_id)
-	references business
 );
 
 create table business_hours (
