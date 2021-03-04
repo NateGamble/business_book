@@ -21,11 +21,9 @@ public class User {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int userId;
 
-//    @NotNull @Length(min=5) @NotEmpty
     @Column(nullable=false, unique=true)
     private String username;
 
-    //@Pattern(regexp=RegexUtil.PASSWORD_REGEX)
     @Column(nullable=false)
     private String password;
 
@@ -36,11 +34,9 @@ public class User {
     @Column(name="phone_number")
     private String phoneNumber;
 
-//    @NotNull @NotEmpty
     @Column(nullable=false)
     private String firstName;
 
-//    @NotNull @NotEmpty
     @Column(nullable=false)
     private String lastName;
 
@@ -67,5 +63,4 @@ public class User {
                 '}';
     }
 
-//
 }
