@@ -10,6 +10,7 @@ import javax.persistence.*;
 
 import javax.validation.constraints.Pattern;
 import java.security.Timestamp;
+import java.util.List;
 
 
 
@@ -49,6 +50,14 @@ public class User {
     @Column(name="user_role_id")
     @Convert(converter = UserRoleConverter.class)
     private Role roleId;
+
+    @ManyToMany
+    @JoinTable(
+        name = "user_favorites",
+        joinColumns = @JoinColumn(name = "user_id"),
+        inverseJoinColumns = @JoinColumn(name = "business_id")
+    )
+    private List<Business> favorites;
 
     @Override
     public String toString() {
