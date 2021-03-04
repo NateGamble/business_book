@@ -1,16 +1,12 @@
 package com.revature.models;
 
-//@Entity
-//@Table(name = "ers_user_roles")
+
 public enum Role {
-    //no role_id here ?
 
     ADMIN("Admin"),
-    FINANCE_MANAGER("Finance Manager"),
-    EMPLOYEE("Employee"),
-    DELETED("Deleted");
+    OWNER("Owner"),
+    USER("User");
 
-//    @Column(name = "role_name")
     private String roleName;
 
     Role(String name) {
@@ -18,13 +14,12 @@ public enum Role {
     }
 
     public static Role getByName(String name) {
-
         for (Role role : Role.values()) {
             if (role.roleName.equals(name)) {
                 return role;
             }
         }
-        return EMPLOYEE;
+        return USER;
     }
 
     @Override
