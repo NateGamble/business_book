@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.Pattern;
 import java.sql.Timestamp;
 
 @Entity
@@ -25,7 +24,7 @@ public class Business {
     @JoinColumn(name = "owner_id", columnDefinition = "int4 NOT NULL")
     private User owner;
 
-    @Pattern(regexp= RegexUtil.EMAIL_REGEX)
+    //@Pattern(regexp= RegexUtil.EMAIL_REGEX)
     @Column(nullable=false, unique=true)
     private String email;
 

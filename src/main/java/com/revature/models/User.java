@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-import javax.validation.constraints.Pattern;
 import java.security.Timestamp;
 import java.util.List;
 
@@ -28,7 +27,7 @@ public class User {
     @Column(nullable=false)
     private String password;
 
-    @Pattern(regexp=RegexUtil.EMAIL_REGEX)
+//    @Pattern(regexp=RegexUtil.EMAIL_REGEX)
     @Column(nullable=false, unique=true)
     private String email;
 
