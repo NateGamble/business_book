@@ -29,7 +29,7 @@ public class User {
     private String password;
 
     @Pattern(regexp=RegexUtil.EMAIL_REGEX)
-    @Column(nullable=false, unique=true)
+    @Column(nullable=false, unique=true)    
     private String email;
 
     @Column(name="phone_number")
@@ -49,7 +49,7 @@ public class User {
 
     @Column(name="user_role_id")
     @Convert(converter = UserRoleConverter.class)
-    private Role roleId;
+    private Role role;
 
     @ManyToMany
     @JoinTable(
