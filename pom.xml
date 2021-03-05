@@ -57,7 +57,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>${lombok.version}</version>
+            <version>1.18.16</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -77,12 +77,26 @@
             <version>RELEASE</version>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>RELEASE</version>
+        </dependency>
     </dependencies>
+
     <build>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.springframework</groupId>
+                        <artifactId>springloaded</artifactId>
+                        <version>${spring-loaded.version}</version>
+                    </dependency>
+                </dependencies>
             </plugin>
         </plugins>
     </build>
