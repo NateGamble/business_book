@@ -1,6 +1,9 @@
 package com.revature.util.aspects;
 
 import com.revature.dtos.ErrorResponse;
+import com.revature.exceptions.InvalidRequestException;
+import com.revature.exceptions.ResourceNotFoundException;
+import com.revature.exceptions.ResourcePersistenceException;
 import com.revature.util.ErrorResponseFactory;
 
 import org.springframework.http.HttpStatus;
