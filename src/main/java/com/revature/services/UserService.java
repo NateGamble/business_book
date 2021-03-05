@@ -39,7 +39,7 @@ public class UserService {
             //throw new ResourcePersistenceException("Username is already in use!");
         }
 
-        newUser.setRoleId(Role.USER); //setRole(Role.BASIC_USER);
+        newUser.setRole(Role.USER); //setRole(Role.BASIC_USER);
         userRepo.save(newUser);
 
     }
@@ -122,7 +122,7 @@ public class UserService {
             case "role":
                 users = users.stream()
                         .collect(Collectors.toCollection(() -> {
-                            return new TreeSet<>(Comparator.comparing(User::getRoleId, Enum::compareTo));
+                            return new TreeSet<>(Comparator.comparing(User::getRole, Enum::compareTo));
                         }));
                 break;
             default:

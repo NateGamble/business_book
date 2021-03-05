@@ -34,21 +34,21 @@ public class User {
     @Column(name="phone_number")
     private String phoneNumber;
 
-    @Column(nullable=false)
+    @Column(name= "firstname", nullable=false)
     private String firstName;
 
-    @Column(nullable=false)
+    @Column(name= "lastname", nullable=false)
     private String lastName;
 
     @Column(name="register_datetime", updatable=false, columnDefinition="timestamp default CURRENT_TIMESTAMP")
     private Timestamp registerDatetime;
 
-    @Column(name="is_active", columnDefinition = "default true")
+    @Column(name="is_active")
     private boolean isActive;
 
     @Column(name="user_role_id")
     @Convert(converter = UserRoleConverter.class)
-    private Role roleId;
+    private Role role;
 
     @ManyToMany
     @JoinTable(

@@ -21,7 +21,7 @@ public class UserController {
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public List<User> getAllUsers() {
-
+        return null; // return userService.getAllUsers();
     }
 
     @GetMapping(path = "/id/{id}")
@@ -38,7 +38,7 @@ public class UserController {
     public User getUserByEmail(@PathVariable String email) {
 
         // Not created yet in UserService
-        //return userService.getUserByEmail(email);
+        return null; // return userService.getUserByEmail(email);
     }
 
     @PostMapping()

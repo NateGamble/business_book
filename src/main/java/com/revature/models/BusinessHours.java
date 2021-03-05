@@ -24,7 +24,7 @@ public class BusinessHours {
     private Business business;
 
     @Column(nullable=false)
-    private String day;
+    private int day;
 
     @Column(nullable = false)
     private Timestamp open;
