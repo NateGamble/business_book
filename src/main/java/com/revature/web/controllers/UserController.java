@@ -41,7 +41,7 @@ public class UserController {
         return null; // return userService.getUserByEmail(email);
     }
 
-    @PostMapping()
+    @PostMapping(path = "/create", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public void addUser(@RequestBody User user) {
         userService.register(user);
     }
@@ -53,9 +53,9 @@ public class UserController {
 
 
     // How do we want to handle a delete?
-    @DeleteMapping(path = "/id/{id}")
+    @DeleteMapping(path = "delete/id/{id}")
     public void deleteUserById(@PathVariable int id) {
         User user = userService.getUserById(id);
-        //userService.delete(user);
+        userService.delete(user);
     }
 }
