@@ -78,7 +78,7 @@ public class BusinessService {
 
         if (!isBusinessValid(business)) throw new InvalidRequestException();
 
-        if (businessRepo.findBusinessByBusinessName(business.getBusinessName()).isPresent()) {
+        if (businessRepo.findBusinessByEmail(business.getEmail()).isPresent()) {
             throw new ResourcePersistenceException("Business is already in use!");
         }
 
