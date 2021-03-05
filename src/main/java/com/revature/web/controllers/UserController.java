@@ -21,7 +21,7 @@ public class UserController {
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public List<User> getAllUsers() {
-        return null; // return userService.getAllUsers();
+        return userService.getAllUsers();
     }
 
     @GetMapping(path = "/id/{id}")

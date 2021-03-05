@@ -46,11 +46,14 @@ public class UserService {
 
     public List<User> getAllUsers() {
 
-        List<User> users;
+        List<User> users = new ArrayList<>();
 
-        users = (List<User>) userRepo.findAll();
+        Iterable<User> userIterable = userRepo.findAll();
+
+        userIterable.forEach(users::add);
 
         if (users.isEmpty()) {
+            System.out.println("did we get here?");
             throw new ResourceNotFoundException();
         }
 
