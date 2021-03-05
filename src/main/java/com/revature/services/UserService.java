@@ -58,9 +58,9 @@ public class UserService {
 
     }
 
-    public Set<User> getUsersByRole(Role role) {
+    public List<User> getUsersByRole(Role role) {
 
-        Set<User> users;
+        List<User> users;
 
         if (role == null) {
             throw new InvalidRequestException();
