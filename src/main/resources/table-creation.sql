@@ -125,3 +125,5 @@ create table business_reviews (
 	references app_users
 );
 
+INSERT INTO app_users (username, password, firstname, lastname, email, phone_number ) VALUES ('wsingleton', 'revature', 'Wezley', 'Singleton', 'phone0', 'wezley.singleton@revature.com', true);
+INSERT INTO app_users (username, password, firstname, lastname, email, phone_number ) VALUES ('0x', 'pass', 'fname', 'lname', 'phone', 'wezley.singleton@revature.com', true);
