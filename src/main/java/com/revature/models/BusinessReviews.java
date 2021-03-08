@@ -23,7 +23,7 @@ public class BusinessReviews {
 
     @JoinColumn(name = "business_id")
     @ManyToOne(targetEntity = Business.class, optional = false)
-    private Business bus;
+    private Business business;
 
     @JoinColumn(name = "user_id")
     @ManyToOne(targetEntity = User.class, optional = false)

@@ -50,4 +50,13 @@ public class UserControllerIntegrationTest {
                     .andExpect(status().isBadRequest());
     }
 
+    @Test
+    public void test_getAllUsers() throws Exception {
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/users"))
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+                    ;
+    }
+
 }
