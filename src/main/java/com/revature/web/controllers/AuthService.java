@@ -59,7 +59,9 @@ public class AuthService {
     @PostMapping(path = "/login", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public Principal authenticateUser(@RequestBody @Valid Credentials credentials, HttpServletResponse response) {
         Principal principal = authenticate(credentials.getUsername(), credentials.getPassword());
-        response.addCookie(new Cookie("bb-token", principal.getToken()));
+        Cookie cookie = new Cookie("bb-token", principal.getToken());
+        cookie.setPath("/");
+        response.addCookie(cookie);
         return principal;
     }
 

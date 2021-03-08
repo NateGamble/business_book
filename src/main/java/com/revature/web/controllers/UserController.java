@@ -1,12 +1,17 @@
 package com.revature.web.controllers;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
+import com.revature.dtos.Principal;
 import com.revature.models.User;
 import com.revature.services.UserService;
+import com.revature.util.JwtParser;
+import com.revature.util.Secured;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
@@ -14,15 +19,35 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
+    private final JwtParser jwtParser;
 
     @Autowired
-    public UserController (UserService userService) {
+    public UserController (UserService userService, JwtParser jwtParser) {
         this.userService = userService;
+        this.jwtParser = jwtParser;
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @Secured(allowedRoles = {"Admin"})
     public List<User> getAllUsers() {
         return userService.getAllUsers();
+    }
+
+    @GetMapping(path = "/user", produces = MediaType.APPLICATION_JSON_VALUE)
+    //@Secured(allowedRoles = {"USER", "OWNER"})
+    public User getCurrentUser(HttpServletRequest req) {
+        Cookie[] cookies = req.getCookies();
+        String token = "";
+
+        for (Cookie cookie : cookies) {
+            if (cookie.getName().equals("bb-token")) {
+                token = cookie.getValue();
+            }
+        }
+
+        Principal principal = jwtParser.parseToken(token);
+
+        return userService.getUserByUsername(principal.getUsername());
     }
 
     @GetMapping(path = "/id/{id}")
@@ -37,7 +62,7 @@ public class UserController {
 
     @GetMapping(path = "/email/{email}")
     public User getUserByEmail(@PathVariable String email) {
-        return userService.getUserByEmail(email);
+        return null; //return userService.getUserByEmail(email);
     }
 
     @PostMapping(path = "/create", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
