@@ -157,4 +157,5 @@ buildNumber.properties
 *.project
 *.settings/
 
+*application.yml
 # End of https://www.toptal.com/developers/gitignore/api/maven,java,vscode,intellij

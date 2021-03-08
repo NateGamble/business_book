@@ -1,20 +1,17 @@
 package com.revature.dtos;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.revature.models.Role;
 import com.revature.models.User;
 
-
-import java.util.Objects;
-
-/**
- * A DTO to facilitate easy transferring of user credentials
- */
 public class Principal {
+
+    @JsonIgnore
+    private String token;
 
     private int id;
     private String username;
-    private String role;
+    private Role role;
 
     public Principal() {
         super();
@@ -23,7 +20,20 @@ public class Principal {
     public Principal(User user) {
         this.id = user.getUserId();
         this.username = user.getUsername();
-        this.role = user.getRole().toString();
+        this.role = user.getRole();
+    }
+    public Principal(int id, String username, Role role) {
+        this.id = id;
+        this.username = username;
+        this.role = role;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 
     public int getId() {
@@ -42,41 +52,11 @@ public class Principal {
         this.username = username;
     }
 
-    public String getRole() {
+    public Role getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(Role role) {
         this.role = role;
     }
-
-    public String stringify() throws JsonProcessingException {
-        ObjectMapper mapper = new ObjectMapper();
-        return mapper.writeValueAsString(this);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Principal principal = (Principal) o;
-        return id == principal.id &&
-                Objects.equals(username, principal.username) &&
-                Objects.equals(role, principal.role);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, username, role);
-    }
-
-    @Override
-    public String toString() {
-        return "Principal{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", role='" + role + '\'' +
-                '}';
-    }
-
 }

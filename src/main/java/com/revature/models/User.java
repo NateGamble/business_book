@@ -8,8 +8,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-import javax.validation.constraints.Pattern;
-import java.security.Timestamp;
+import java.sql.Timestamp;
 import java.util.List;
 
 
@@ -28,23 +27,23 @@ public class User {
     @Column(nullable=false)
     private String password;
 
-    @Pattern(regexp=RegexUtil.EMAIL_REGEX)
-    @Column(nullable=false, unique=true)    
+//    @Pattern(regexp=RegexUtil.EMAIL_REGEX)
+    @Column(nullable=false, unique=true)
     private String email;
 
     @Column(name="phone_number")
     private String phoneNumber;
 
-    @Column(nullable=false)
+    @Column(name= "firstname", nullable=false)
     private String firstName;
 
-    @Column(nullable=false)
+    @Column(name= "lastname", nullable=false)
     private String lastName;
 
     @Column(name="register_datetime", updatable=false, columnDefinition="timestamp default CURRENT_TIMESTAMP")
     private Timestamp registerDatetime;
 
-    @Column(name="is_active", columnDefinition = "default true")
+    @Column(name="is_active")
     private boolean isActive;
 
     @Column(name="user_role_id")

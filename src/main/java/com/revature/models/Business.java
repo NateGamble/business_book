@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.Pattern;
 import java.sql.Timestamp;
 
 @Entity
@@ -17,7 +16,7 @@ import java.sql.Timestamp;
 public class Business {
 
     @Id
-    @Column(name="user_id")
+    @Column(name="business_id")
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int id;
 
@@ -25,7 +24,7 @@ public class Business {
     @JoinColumn(name = "owner_id", columnDefinition = "int4 NOT NULL")
     private User owner;
 
-    @Pattern(regexp= RegexUtil.EMAIL_REGEX)
+    //@Pattern(regexp= RegexUtil.EMAIL_REGEX)
     @Column(nullable=false, unique=true)
     private String email;
 
@@ -41,7 +40,7 @@ public class Business {
     @Column(name="register_datetime", updatable=false, columnDefinition="timestamp default CURRENT_TIMESTAMP")
     private Timestamp registerDatetime;
 
-    @Column(name="is_active", columnDefinition = "default true")
+    @Column(name="is_active")
     private boolean isActive;
 
     @Override
