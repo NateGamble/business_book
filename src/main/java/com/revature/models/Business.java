@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.List;
 
 @Entity
 @Table(name ="business")
@@ -42,6 +43,18 @@ public class Business {
 
     @Column(name="is_active")
     private boolean isActive;
+
+    @JoinColumn(name = "business_id")
+    @OneToMany(targetEntity =  BusinessReviews.class)
+    List<BusinessReviews> businessReviews;
+
+    @JoinColumn(name = "business_id")
+    @OneToMany(targetEntity =  BusinessHours.class)
+    List<BusinessHours> businessHours;
+
+    @JoinColumn(name = "business_id")
+    @OneToMany(targetEntity =  Posts.class)
+    List<Posts> businessPosts;
 
     @Override
     public String toString() {

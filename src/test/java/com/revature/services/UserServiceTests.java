@@ -1,37 +1,35 @@
 package com.revature.services;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.when;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import com.revature.models.Role;
 import com.revature.models.User;
 import com.revature.repos.UserRepository;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+
+import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.stereotype.Component;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.mockito.MockitoAnnotations;
+import org.mockito.junit.MockitoJUnitRunner;
 
-import java.sql.Timestamp;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-@RunWith(SpringRunner.class)
-@DataJpaTest
+@RunWith(MockitoJUnitRunner.class)
 public class UserServiceTests {
 
     @Mock
     UserRepository userRepo;
     @InjectMocks
     UserService userService;
+    List<User> standardUsers;
     User eric;
 
-    @BeforeEach
+    @Before
     public void setUp() {
         //set up the user we can try to add to the db
         eric = new User();
@@ -43,28 +41,19 @@ public class UserServiceTests {
         eric.setRole(Role.USER);
         eric.setPassword("Packers1");
         eric.setPhoneNumber("123");
+        MockitoAnnotations.initMocks(this);
+        standardUsers = new ArrayList<>();
+        standardUsers.add(eric);
 
-//        eric2 = new User();
-//        eric2.setEmail("eric2@email");
-//        eric2.setFirstname("Eric2");
-//        eric2.setLastname("Newman2");
-//        eric2.setUsername("enewman12");
-//        eric2.setUserId(2);
-//        eric2.setUserRole(2);
-//        eric2.setPassword("Packers2");
-
-        //initialize the userservice that actually does the act of registering and such
-        userService = new UserService(userRepo);
     }
 
-
     @Test
-    @DisplayName("Check registration")
-    public void saveAndAuthenticate() {
-        userService.register(eric);
-//        Reimbursement testReim = reimbService.getReimbByUserId(eric.getUserId()).get(0);
-//        assertEquals(reim.getAuthorId(), testReim.getAuthorId(),
-//                "User not making it to the database or not coming back from getbyuserid");
+    public void getAllUsers() {
+        when(userRepo.findAll()).thenReturn(standardUsers);
+
+        List<User> users = userService.getAllUsers();
+        // System.out.println(users);
+        assertEquals(standardUsers, users);
     }
 
 }
