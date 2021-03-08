@@ -89,6 +89,14 @@ public class UserService {
 
     }
 
+    public User getUserByEmail(String email) {
+        if (email == null || email.trim().equals("")) {
+            throw new InvalidRequestException();
+        }
+
+        return userRepo.findUserByEmail(email).orElseThrow(ResourceNotFoundException::new);
+    }
+
     public boolean confirmAccount(int userId) {
 
         if (userId <= 0) {

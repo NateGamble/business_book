@@ -36,9 +36,7 @@ public class UserController {
 
     @GetMapping(path = "/email/{email}")
     public User getUserByEmail(@PathVariable String email) {
-
-        // Not created yet in UserService
-        return null; // return userService.getUserByEmail(email);
+        return userService.getUserByEmail(email);
     }
 
     @PostMapping(path = "/create", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
