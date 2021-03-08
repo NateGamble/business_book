@@ -6,6 +6,8 @@
 # Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
 *.idea/
 
+*.yml
+
 # User-specific stuff
 .idea/**/workspace.xml
 .idea/**/tasks.xml
@@ -144,7 +146,7 @@ buildNumber.properties
 .mvn/wrapper/maven-wrapper.jar
 
 ### vscode ###
-.vscode/*
+*.vscode/
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json

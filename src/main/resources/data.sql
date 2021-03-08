@@ -1,7 +1,6 @@
 insert into app_users (username, password, email, phone_number, firstname, lastname, user_role_id, is_active) values
 ('ngamble', 'pass', 'nathan.gamble@revature.net', '9168500634', 'Nate', 'Gamble', 1, true),
-('testUser2', 'pass', 'test.user@revature.net', '8199647755', 'test', 'user', 3, true),
-('0x', '111', '0x@revature.net', '42343234', 'test', 'user', 3, true);
+('testUser2', 'pass', 'test.user@revature.net', '8199647755', 'test', 'user', 3, true);
 
 insert into business (owner_id, email, business_name, location, business_type, is_active) values
 (1, 'nathan.gamble@revature.net', 'testBusiness', 'here', 'fake', true);
