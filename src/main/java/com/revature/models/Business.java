@@ -46,15 +46,12 @@ public class Business {
     private boolean isActive;
 
     @OneToMany(mappedBy = "business")
-    @JsonIgnore
     List<BusinessReviews> reviews;
 
     @OneToMany(mappedBy = "business")
-    @JsonIgnore
     List<BusinessHours> hours;
 
     @OneToMany(mappedBy = "business")
-    @JsonIgnore
     List<Posts> posts;
 
     @Override
