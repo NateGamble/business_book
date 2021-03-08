@@ -1,5 +1,6 @@
 package com.revature.web.controllers;
 
+import at.favre.lib.crypto.bcrypt.BCrypt;
 import com.revature.models.User;
 import com.revature.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,13 +37,12 @@ public class UserController {
 
     @GetMapping(path = "/email/{email}")
     public User getUserByEmail(@PathVariable String email) {
-
-        // Not created yet in UserService
-        return null; // return userService.getUserByEmail(email);
+        return userService.getUserByEmail(email);
     }
 
     @PostMapping(path = "/create", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public void addUser(@RequestBody User user) {
+        user.setPassword(BCrypt.withDefaults().hashToString(12, user.getPassword().toCharArray()));
         userService.register(user);
     }
 
