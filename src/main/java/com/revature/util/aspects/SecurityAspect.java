@@ -60,14 +60,13 @@ public class SecurityAspect {
 
         Principal principal = jwtParser.parseToken(token);
 
-        System.out.println(principal.getRole());
-
         //Principal principal = (Principal) request.getAttribute("principal");
 
         if (principal == null) {
             throw new AuthenticationException();
         }
-        if (!allowedRoles.contains(principal.getRole())) {
+        if (!allowedRoles.contains(principal.getRole().toString())) {
+            System.out.println(principal.getRole());
             throw new AuthorizationException();
         }
         // pjp.proceed() allows method to proceed

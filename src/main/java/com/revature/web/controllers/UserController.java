@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -28,13 +30,13 @@ public class UserController {
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    @Secured(allowedRoles = {"Admin"})
+    //@Secured(allowedRoles = {"Admin"})
     public List<User> getAllUsers() {
         return userService.getAllUsers();
     }
 
     @GetMapping(path = "/user", produces = MediaType.APPLICATION_JSON_VALUE)
-    //@Secured(allowedRoles = {"USER", "OWNER"})
+    @Secured(allowedRoles = {"User", "Owner"})
     public User getCurrentUser(HttpServletRequest req) {
         Cookie[] cookies = req.getCookies();
         String token = "";
@@ -68,6 +70,8 @@ public class UserController {
     @PostMapping(path = "/create", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public void addUser(@RequestBody User user) {
         user.setPassword(BCrypt.withDefaults().hashToString(12, user.getPassword().toCharArray()));
+        user.setRegisterDatetime(Timestamp.valueOf(LocalDateTime.now()));
+        user.setActive(true);
         userService.register(user);
     }
 
