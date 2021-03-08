@@ -100,58 +100,6 @@ public class BusinessService {
         return ownerBusinesses;
     }
 
-    // public List<BusinessReviews> findBusinessReviewsByBusiness(Business business) {
-    //     List<BusinessReviews> businessReviews;
-    //     if (business == null) {
-    //         throw new InvalidRequestException();
-    //     }
-
-    //     businessReviews = businessRepo.findBusinessByEmail(business.getEmail())
-    //                         .orElseThrow(ResourceNotFoundException::new)
-    //                         .getReviews();
-
-    //     if (businessReviews.isEmpty()) {
-    //         throw new ResourceNotFoundException();
-    //     }
-
-    //     return businessReviews;
-    // }
-
-    // public List<BusinessHours> findBusinessHoursByBusiness(Business business) {
-    //     List<BusinessHours> businessHours;
-    //     if (business == null) {
-    //         throw new InvalidRequestException();
-    //     }
-
-    //     businessHours = businessRepo.findBusinessByEmail(business.getEmail())
-    //                         .orElseThrow(ResourceNotFoundException::new)
-    //                         .getHours();
-
-    //     if (businessHours.isEmpty()) {
-    //         throw new ResourceNotFoundException();
-    //     }
-
-    //     return businessHours;
-    // }
-
-    // public List<Posts> findBusinessPostsByBusiness(Business business) {
-    //     List<Posts> businessPosts;
-    //     if (business == null) {
-    //         throw new InvalidRequestException();
-    //     }
-
-    //     businessPosts = businessRepo.findBusinessByEmail(business.getEmail())
-    //                         .orElseThrow(ResourceNotFoundException::new)
-    //                         .getPosts();
-                            
-
-    //     if (businessPosts.isEmpty()) {
-    //         throw new ResourceNotFoundException();
-    //     }
-
-    //     return businessPosts;
-    // }
-
     public Boolean isBusinessValid(Business business) {
         System.out.println(business);
         if (business == null) return false;
