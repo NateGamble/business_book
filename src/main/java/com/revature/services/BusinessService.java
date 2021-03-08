@@ -42,7 +42,7 @@ public class BusinessService {
             throw new InvalidRequestException();
         }
 
-        return businessRepo.findBusinessByEmail(businessName).orElseThrow(ResourceNotFoundException::new);
+        return businessRepo.findBusinessByBusinessName(businessName).orElseThrow(ResourceNotFoundException::new);
     }
 
     public Business getBusinessByLocation(String location) {
