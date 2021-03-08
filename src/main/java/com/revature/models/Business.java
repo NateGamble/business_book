@@ -1,5 +1,6 @@
 package com.revature.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.revature.util.RegexUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -44,17 +45,14 @@ public class Business {
     @Column(name="is_active")
     private boolean isActive;
 
-    @JoinColumn(name = "business_id")
-    @OneToMany(targetEntity =  BusinessReviews.class)
-    List<BusinessReviews> businessReviews;
+    @OneToMany(mappedBy = "business")
+    List<BusinessReviews> reviews;
 
-    @JoinColumn(name = "business_id")
-    @OneToMany(targetEntity =  BusinessHours.class)
-    List<BusinessHours> businessHours;
+    @OneToMany(mappedBy = "business")
+    List<BusinessHours> hours;
 
-    @JoinColumn(name = "business_id")
-    @OneToMany(targetEntity =  Posts.class)
-    List<Posts> businessPosts;
+    @OneToMany(mappedBy = "business")
+    List<Posts> posts;
 
     @Override
     public String toString() {

@@ -15,7 +15,4 @@ public interface BusinessRepository extends CrudRepository<Business, Integer> {
     Optional<Business> findBusinessByBusinessName(String businessName);
     Optional<Business> findBusinessByLocation(String location);
     Optional<Business> findBusinessByRegisterDatetime(Timestamp registerDatetime);
-    List<BusinessReviews> findBusinessReviewsByBusiness(Business business);
-    List<BusinessHours> findBusinessHoursByBusiness(Business business);
-    List<Posts> findBusinessPostsByBusiness(Business business);
 }
