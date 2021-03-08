@@ -46,15 +46,15 @@ public class Business {
 
     @JoinColumn(name = "business_id")
     @OneToMany(targetEntity =  BusinessReviews.class)
-    List<BusinessReviews> businessReviews;
+    List<BusinessReviews> reviews;
 
     @JoinColumn(name = "business_id")
     @OneToMany(targetEntity =  BusinessHours.class)
-    List<BusinessHours> businessHours;
+    List<BusinessHours> hours;
 
     @JoinColumn(name = "business_id")
     @OneToMany(targetEntity =  Posts.class)
-    List<Posts> businessPosts;
+    List<Posts> posts;
 
     @Override
     public String toString() {
