@@ -16,6 +16,8 @@ import org.springframework.web.context.WebApplicationContext;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import com.revature.models.Business;
+
 
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
@@ -55,8 +57,7 @@ public class UserControllerIntegrationTest {
         this.mockMvc.perform(MockMvcRequestBuilders.get("/users"))
                     .andDo(print())
                     .andExpect(status().isOk())
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-                    ;
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE));
     }
 
 }
