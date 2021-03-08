@@ -43,4 +43,11 @@ public class UserControllerIntegrationTest {
                     .andExpect(jsonPath("$.userId").value(1));
     }
 
+    @Test
+    public void test_getUserById_givenInvalidId() throws Exception {
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/users/id/{id}", -1))
+                    .andDo(print())
+                    .andExpect(status().isBadRequest());
+    }
+
 }
