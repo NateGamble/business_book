@@ -5,6 +5,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.sql.Timestamp;
 
 @Entity
@@ -21,6 +24,7 @@ public class Posts {
 
     @ManyToOne(targetEntity = Business.class, optional = false)
     @JoinColumn(name = "business_id", columnDefinition = "int4 NOT NULL")
+    @JsonIgnore
     private Business business;
 
     @Column(name="post_type", nullable=false)
