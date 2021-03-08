@@ -17,7 +17,7 @@ import java.util.List;
 public class Business {
 
     @Id
-    @Column(name="user_id")
+    @Column(name="business_id")
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int id;
 
@@ -41,7 +41,7 @@ public class Business {
     @Column(name="register_datetime", updatable=false, columnDefinition="timestamp default CURRENT_TIMESTAMP")
     private Timestamp registerDatetime;
 
-    @Column(name="is_active", columnDefinition = "default true")
+    @Column(name="is_active")
     private boolean isActive;
 
     @JoinColumn(name = "business_id")

@@ -38,7 +38,7 @@ public class UserServiceTests {
         eric.setLastName("Newman");
         eric.setUsername("enewman11");
         eric.setUserId(1);
-        eric.setRoleId(Role.USER);
+        eric.setRole(Role.USER);
         eric.setPassword("Packers1");
         eric.setPhoneNumber("123");
         MockitoAnnotations.initMocks(this);

@@ -39,18 +39,21 @@ public class UserService {
             //throw new ResourcePersistenceException("Username is already in use!");
         }
 
-        newUser.setRoleId(Role.USER); //setRole(Role.BASIC_USER);
+        newUser.setRole(Role.USER); //setRole(Role.BASIC_USER);
         userRepo.save(newUser);
 
     }
 
     public List<User> getAllUsers() {
 
-        List<User> users;
+        List<User> users = new ArrayList<>();
 
-        users = (List<User>) userRepo.findAll();
+        Iterable<User> userIterable = userRepo.findAll();
+
+        userIterable.forEach(users::add);
 
         if (users.isEmpty()) {
+            System.out.println("did we get here?");
             throw new ResourceNotFoundException();
         }
 
@@ -122,7 +125,7 @@ public class UserService {
             case "role":
                 users = users.stream()
                         .collect(Collectors.toCollection(() -> {
-                            return new TreeSet<>(Comparator.comparing(User::getRoleId, Enum::compareTo));
+                            return new TreeSet<>(Comparator.comparing(User::getRole, Enum::compareTo));
                         }));
                 break;
             default:
@@ -163,6 +166,10 @@ public class UserService {
 
         userRepo.save(updatedUser);
 
+    }
+
+    public void delete(User user) {
+        userRepo.delete(user);
     }
 
     public Boolean isUserValid(User user) {
