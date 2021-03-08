@@ -1,5 +1,6 @@
 package com.revature.web.controllers;
 
+import at.favre.lib.crypto.bcrypt.BCrypt;
 import com.revature.dtos.Credentials;
 import com.revature.dtos.Principal;
 import com.revature.exceptions.AuthenticationException;
@@ -70,10 +71,25 @@ public class AuthService {
      */
     public Principal authenticate(String username, String password) {
         try {
-            User authUser = userService.authenticate(username, password);
-            Principal principal = new Principal(authUser);
-            String token = jwtGenerator.createJwt(principal);
-            principal.setToken(token);
+
+            User hashedUser = userService.getUserByUsername(username);
+
+            BCrypt.Result result = BCrypt.verifyer().verify(password.toCharArray(), hashedUser.getPassword());
+
+            Principal principal = new Principal(hashedUser);
+
+            if (result.verified) {
+                String token = jwtGenerator.createJwt(principal);
+                principal.setToken(token);
+            } else {
+                throw new AuthenticationException("Account not confirmed.");
+            }
+
+            // User authUser = userService.authenticate(username, password);
+            //Principal principal = new Principal(authUser);
+            //String token = jwtGenerator.createJwt(principal);
+            //principal.setToken(token);
+
             return principal;
         }catch(AuthenticationException e){throw new AuthenticationException("Account not confirmed.");}
     }
