@@ -28,7 +28,7 @@ public class Posts {
     private Business business;
 
     @Column(name="post_type", nullable=false)
-    private int postType;
+    private Integer postType;
 
     @Column(nullable=false)
     private String body;

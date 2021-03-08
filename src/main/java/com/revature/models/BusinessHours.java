@@ -13,8 +13,7 @@ import java.sql.Timestamp;
 @Entity
 @Table(name ="business_hours")
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
+@AllArgsConstructor @NoArgsConstructor
 public class BusinessHours {
 
     @Id
