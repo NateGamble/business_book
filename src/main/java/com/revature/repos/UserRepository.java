@@ -14,6 +14,7 @@ public interface UserRepository extends CrudRepository<User, Integer> {
     Optional<User> findUserByUsername(String username);
     Set<User> findUsersByRole(String role);
     Optional<User> findUserByUsernameAndPassword(String username, String password);
+    Optional<User> findUserByEmail(String email);
 
 //    @Query(value = "update User set accountConfirmed = true where id = :id")
 //    void confirmAccount(int id);
