@@ -40,7 +40,7 @@ public class UserControllerIntegrationTest {
                     .andDo(print())
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-                    .andExpect(jsonPath("$.id").value(1));
+                    .andExpect(jsonPath("$.userId").value(1));
     }
 
 }
