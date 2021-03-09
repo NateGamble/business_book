@@ -30,6 +30,7 @@ public class BusinessReviews {
 
     @JoinColumn(name = "user_id")
     @ManyToOne(targetEntity = User.class, optional = false)
+    @JsonIgnore
     private User user;
 
     @Column(name = "rating", nullable = false)
