@@ -1,5 +1,6 @@
 package com.revature.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.revature.util.RegexUtil;
 import com.revature.util.UserRoleConverter;
 import lombok.AllArgsConstructor;
@@ -56,6 +57,7 @@ public class User {
         joinColumns = @JoinColumn(name = "user_id"),
         inverseJoinColumns = @JoinColumn(name = "business_id")
     )
+    @JsonIgnore
     private List<Business> favorites;
 
     @Override
