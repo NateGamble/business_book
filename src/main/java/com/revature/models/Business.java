@@ -49,7 +49,7 @@ public class Business {
     List<BusinessReviews> reviews;
 
     @OneToMany(mappedBy = "business")
-    List<BusinessHours> hours;
+    List<Hours> hours;
 
     @OneToMany(mappedBy = "business")
     List<Posts> posts;
