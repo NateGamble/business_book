@@ -14,7 +14,7 @@ import java.sql.Timestamp;
 @Table(name ="business_hours")
 @Data
 @AllArgsConstructor @NoArgsConstructor
-public class BusinessHours {
+public class Hours {
 
     @Id
     @Column(name="hours_id")
