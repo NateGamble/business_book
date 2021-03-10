@@ -101,7 +101,7 @@ public class BusinessService {
     }
 
     public Boolean isBusinessValid(Business business) {
-        System.out.println(business);
+        //System.out.println(business);
         if (business == null) return false;
         if (business.getOwner() == null || business.getOwner().getUserId() <= 0) return false;
         if (business.getBusinessName() == null || business.getBusinessName().trim().equals("")) return false;

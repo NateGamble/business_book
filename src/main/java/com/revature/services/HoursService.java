@@ -1,6 +1,7 @@
 package com.revature.services;
 
 import com.revature.exceptions.InvalidRequestException;
+import com.revature.exceptions.ResourceNotFoundException;
 import com.revature.models.Business;
 import com.revature.models.Hours;
 import com.revature.repos.BusinessHoursRepository;
@@ -9,17 +10,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import java.util.Optional;
 
-public class BusinessHoursService {
+public class HoursService {
 
     private BusinessHoursRepository repo;
 
     @Autowired
-    public BusinessHoursService (BusinessHoursRepository repo) {
+    public HoursService(BusinessHoursRepository repo) {
         this.repo = repo;
     }
 
-    public Optional<Hours> findHoursByHoursId (int id) {
-        return repo.findById(id);
+    public Hours findHoursByHoursId (int id) {
+        if (id < 1) {
+            throw new InvalidRequestException();
+        }
+
+        return repo.findById(id).orElseThrow(ResourceNotFoundException::new);
     }
 
     public List<Hours> findHoursByBusiness (Business bus) {
