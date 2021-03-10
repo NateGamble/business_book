@@ -1,10 +1,8 @@
 package com.revature.services;
 
 import com.revature.exceptions.InvalidRequestException;
-import com.revature.exceptions.ResourcePersistenceException;
 import com.revature.models.Business;
 import com.revature.models.Hours;
-import com.revature.models.Posts;
 import com.revature.repos.BusinessHoursRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -20,7 +18,7 @@ public class BusinessHoursService {
         this.repo = repo;
     }
 
-    public Optional<Hours> findHoursById (int id) {
+    public Optional<Hours> findHoursByHoursId (int id) {
         return repo.findById(id);
     }
 
