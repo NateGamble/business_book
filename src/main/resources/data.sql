@@ -7,7 +7,7 @@ insert into business (owner_id, email, business_name, location, business_type, i
 (1, 'nathan.gamble@revature.net', 'testBusiness', 'here', 'fake', true);
 
 insert into posts (business_id, post_type, body) values
-(1, 1, 'Body of a definitely real post');
+(1, 'sale', 'Body of a definitely real post');
 
 insert into business_hours (business_id, day, open, closed) values
 (1, 1, '2021-03-01 09:00:00-00', '2021-03-01 21:00:00-00');
