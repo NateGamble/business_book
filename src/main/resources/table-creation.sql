@@ -63,7 +63,7 @@ create table business (
 create table posts (
   post_id serial,
   business_id int,
-  post_type int,
+  post_type varchar(255),
   body varchar(2056) not null,
   created_time timestamp default localtimestamp,
   
