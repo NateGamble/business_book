@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface BusinessReviewsRepository extends CrudRepository<Review, Integer> {
+public interface ReviewsRepository extends CrudRepository<Review, Integer> {
     
     List<Review> findReviewsByBusiness(Business bus);
     List<Review> findReviewsByUser(User u);

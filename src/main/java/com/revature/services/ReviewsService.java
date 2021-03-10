@@ -3,7 +3,7 @@ package com.revature.services;
 import com.revature.exceptions.InvalidRequestException;
 import com.revature.exceptions.ResourcePersistenceException;
 import com.revature.models.*;
-import com.revature.repos.BusinessReviewsRepository;
+import com.revature.repos.ReviewsRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,12 +12,12 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class BusinessReviewsService {
+public class ReviewsService {
 
-    private BusinessReviewsRepository repo;
+    private ReviewsRepository repo;
 
     @Autowired
-    public BusinessReviewsService(BusinessReviewsRepository repo) {
+    public ReviewsService(ReviewsRepository repo) {
         this.repo = repo;
     }
 
