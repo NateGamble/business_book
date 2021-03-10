@@ -20,6 +20,10 @@ public class PostService {
         this.repo = repo;
     }
 
+    public List<Post> findAllPosts() {
+        return (List<Post>) repo.findAll();
+    }
+
     public Optional<Post> findPostByPostId(int id) {
         return repo.findById(id);
     }
