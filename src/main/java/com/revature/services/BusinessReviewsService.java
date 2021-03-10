@@ -21,33 +21,33 @@ public class BusinessReviewsService {
         this.repo = repo;
     }
 
-    public Optional<BusinessReviews> findReviewByReviewId(int id) {
+    public Optional<Review> findReviewByReviewId(int id) {
         return repo.findById(id);
     }
 
-    public List<BusinessReviews> findReviewsByBusiness(Business bus) {
+    public List<Review> findReviewsByBusiness(Business bus) {
         return repo.findReviewsByBusiness(bus);
     }
 
-    public List<BusinessReviews> findReviewsByUser(User u) {
+    public List<Review> findReviewsByUser(User u) {
         return repo.findReviewsByUser(u);
     }
 
-    public void createReview(BusinessReviews review) {
+    public void createReview(Review review) {
         if (!isReviewValid(review))
             throw new ResourcePersistenceException();
         
         repo.save(review);
     }
 
-    public void editReview(BusinessReviews review) {
+    public void editReview(Review review) {
         if (!isReviewValid(review))
             throw new ResourcePersistenceException();
         
         repo.save(review);
     }
 
-    public void deleteReview(BusinessReviews review) {
+    public void deleteReview(Review review) {
         if (!isReviewValid(review))
             throw new InvalidRequestException();
 
@@ -55,7 +55,7 @@ public class BusinessReviewsService {
     }
 
 
-    protected boolean isReviewValid(BusinessReviews review) {
+    protected boolean isReviewValid(Review review) {
         if (review.getBusiness() == null) return false;
         if (review.getUser() == null) return false;
         if (review.getRating() == null) return false;
