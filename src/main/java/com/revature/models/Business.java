@@ -46,13 +46,13 @@ public class Business {
     private boolean isActive;
 
     @OneToMany(mappedBy = "business")
-    List<BusinessReviews> reviews;
+    List<Review> reviews;
 
     @OneToMany(mappedBy = "business")
-    List<BusinessHours> hours;
+    List<Hours> hours;
 
     @OneToMany(mappedBy = "business")
-    List<Posts> posts;
+    List<Post> posts;
 
     @Override
     public String toString() {
