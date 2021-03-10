@@ -33,7 +33,7 @@ public class BusinessReviews {
     private User user;
 
     @Column(name = "rating", nullable = false)
-    private double rating;
+    private Double rating;
 
     @Column(name = "review")
     private String review;
