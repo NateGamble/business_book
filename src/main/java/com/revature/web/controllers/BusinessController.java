@@ -5,6 +5,7 @@ import com.revature.models.Hours;
 import com.revature.models.Post;
 import com.revature.models.Review;
 import com.revature.services.BusinessService;
+import com.revature.services.HoursService;
 import com.revature.services.PostService;
 import com.revature.services.ReviewsService;
 import com.revature.util.Secured;
@@ -22,12 +23,15 @@ public class BusinessController {
     private final BusinessService bizService;
     private final ReviewsService reviewsService;
     private final PostService postService;
+    private final HoursService hoursService;
 
     @Autowired
-    public BusinessController (BusinessService bizService, ReviewsService reviewsService, PostService postService) {
+    public BusinessController (BusinessService bizService, ReviewsService reviewsService,
+                               PostService postService, HoursService hoursService) {
         this.bizService = bizService;
         this.reviewsService = reviewsService;
         this.postService = postService;
+        this.hoursService = hoursService;
     }
 
     // ADMIN PRIVILEGES SECTION
@@ -98,7 +102,7 @@ public class BusinessController {
     @GetMapping(path = "/id/{id}/hours")
     public List<Hours> getBusinessHours(@PathVariable int id) {
         Business biz =  bizService.getBusinessById(id);
-        return biz.getHours();
+        return hoursService.findHoursByBusiness(biz);
     }
 
     @GetMapping(path = "/id/{id}/posts")

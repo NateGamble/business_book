@@ -4,7 +4,7 @@ import com.revature.exceptions.InvalidRequestException;
 import com.revature.exceptions.ResourceNotFoundException;
 import com.revature.models.Business;
 import com.revature.models.Hours;
-import com.revature.repos.BusinessHoursRepository;
+import com.revature.repos.HoursRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
@@ -12,10 +12,10 @@ import java.util.Optional;
 
 public class HoursService {
 
-    private BusinessHoursRepository repo;
+    private HoursRepository repo;
 
     @Autowired
-    public HoursService(BusinessHoursRepository repo) {
+    public HoursService(HoursRepository repo) {
         this.repo = repo;
     }
 
