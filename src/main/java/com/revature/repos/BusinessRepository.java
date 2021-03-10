@@ -11,6 +11,7 @@ import java.util.Optional;
 @Repository
 public interface BusinessRepository extends CrudRepository<Business, Integer> {
     List<Business> findBusinessesByOwner(User owner);
+    List<Business> findBusinessesByBusinessType(String type);
     Optional<Business> findBusinessByEmail(String email);
     Optional<Business> findBusinessByBusinessName(String businessName);
     Optional<Business> findBusinessByLocation(String location);

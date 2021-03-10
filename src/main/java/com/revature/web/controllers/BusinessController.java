@@ -1,15 +1,15 @@
 package com.revature.web.controllers;
 
 import com.revature.models.Business;
-import com.revature.models.BusinessHours;
-import com.revature.models.BusinessReviews;
-import com.revature.models.Posts;
+import com.revature.models.Hours;
+import com.revature.models.Post;
+import com.revature.models.Review;
 import com.revature.services.BusinessService;
+import com.revature.services.PostService;
+import com.revature.services.ReviewsService;
+import com.revature.util.Secured;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.http.MediaType;
 
 import java.sql.Timestamp;
@@ -20,15 +20,57 @@ import java.util.List;
 public class BusinessController {
 
     private final BusinessService bizService;
+    private final ReviewsService reviewsService;
+    private final PostService postService;
 
     @Autowired
-    public BusinessController (BusinessService bizService) { this.bizService = bizService; }
+    public BusinessController (BusinessService bizService, ReviewsService reviewsService, PostService postService) {
+        this.bizService = bizService;
+        this.reviewsService = reviewsService;
+        this.postService = postService;
+    }
+
+    // ADMIN PRIVILEGES SECTION
 
     @GetMapping(produces=MediaType.APPLICATION_JSON_VALUE)
     public List<Business> getAllBusinesses() { return bizService.getAllBusinesses(); }
 
     @GetMapping(path = "/id/{id}")
+    @Secured(allowedRoles = {"Admin"})
     public Business getBusinessById(@PathVariable int id) { return bizService.getBusinessById(id); }
+
+    @DeleteMapping(path = "/reviews/{id}")
+    @Secured(allowedRoles = {"Admin"})
+    public void deleteBusinessReviewById(@PathVariable int id) {
+        Review review = reviewsService.findReviewByReviewId(id).get();
+        reviewsService.deleteReview(review);
+    }
+
+    @DeleteMapping(path = "/id/{id}")
+    @Secured(allowedRoles = {"Admin", "Owner"})
+    public void deleteBusinessById(@PathVariable int id) {
+        bizService.deleteBusinessById(id);
+    }
+
+    @PutMapping()
+    @Secured(allowedRoles = {"Admin", "Owner"})
+    public void addNewBusiness(@RequestBody Business biz) {
+        bizService.addBusiness(biz);
+    }
+
+    // END ADMIN PRIVILEGES SECTION ///////////////////////////////////////////////////
+
+    // OWNER PRIVILEGES SECTION
+
+    @PutMapping(path = "/id/{id}/posts")
+    @Secured(allowedRoles = {"Owner"})
+    public void addNewBusinessPost(@PathVariable int id, @RequestBody Post post) {
+        Business biz = bizService.getBusinessById(id);
+        post.setBusiness(biz);
+        bizService.addBusiness(biz);
+    }
+
+    // END OWNER PRIVILEGES SECTION
 
     @GetMapping(path = "/name/{businessName}")
     public Business getBusinessByName(@PathVariable String businessName) { return bizService.getBusinessByBusinessName(businessName); }
@@ -42,21 +84,34 @@ public class BusinessController {
     @GetMapping(path = "/registrationDate/{date}")
     public Business getBusinessByRegistrationDate(@PathVariable Timestamp date) { return bizService.getBusinessByRegistrationDate(date); }
 
-    @GetMapping(path = "/reviews/{id}")
-    public List<BusinessReviews> getBusinessReviews(@PathVariable int id) {
-        Business biz =  bizService.getBusinessById(id);
-        return biz.getReviews();
+    @GetMapping(path = "/type/{type}")
+    public List<Business> getBusinessesByType(@PathVariable String type) {
+        return bizService.getBusinessesByType(type);
     }
 
-    @GetMapping(path = "/hours/{id}")
-    public List<BusinessHours> getBusinessHours(@PathVariable int id) {
+    @GetMapping(path = "/id/{id}/reviews")
+    public List<Review> getBusinessReviews(@PathVariable int id) {
+        Business biz =  bizService.getBusinessById(id);
+        return reviewsService.findReviewsByBusiness(biz);
+    }
+
+    @GetMapping(path = "/id/{id}/hours")
+    public List<Hours> getBusinessHours(@PathVariable int id) {
         Business biz =  bizService.getBusinessById(id);
         return biz.getHours();
     }
 
-    @GetMapping(path = "/posts/{id}")
-    public List<Posts> getBusinessPosts(@PathVariable int id) {
+    @GetMapping(path = "/id/{id}/posts")
+    public List<Post> getBusinessPosts(@PathVariable int id) {
         Business biz =  bizService.getBusinessById(id);
-        return biz.getPosts();
+        return postService.findPostsByBusiness(biz);
+    }
+
+    @PutMapping(path = "/id/{id}/reviews")
+    @Secured(allowedRoles = {"User"})
+    public void addNewBusinessReview (@RequestBody Review review, @PathVariable int id) {
+        Business biz = bizService.getBusinessById(id);
+        review.setBusiness(biz);
+        reviewsService.createReview(review);
     }
 }
