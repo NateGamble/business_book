@@ -29,6 +29,11 @@ public class PostServiceTester {
 
     @Test
     public void getAllBusinessPosts() {
+    }
+
+    @Test
+    public void getPostsByBusiness() {
+
         User u = new User();
         u.setEmail("nathan.gamble@revature.net");
         u.setUsername("ngamble");
@@ -42,6 +47,6 @@ public class PostServiceTester {
         Post post = new Post();
         post.setBusiness(bus);
         post.setBody("fake post");
-        // post.setPostType(postType);
+        post.setPostType("sale");
     }
 }
