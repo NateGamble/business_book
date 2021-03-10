@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 
 @Entity @Table(name = "business_reviews")
 @Data @AllArgsConstructor @NoArgsConstructor
-public class BusinessReviews {
+public class Review {
 
     @Id @Column(name = "review_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,7 +34,7 @@ public class BusinessReviews {
     private User user;
 
     @Column(name = "rating", nullable = false)
-    private double rating;
+    private Double rating;
 
     @Column(name = "review")
     private String review;
