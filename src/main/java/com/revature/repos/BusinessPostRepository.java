@@ -6,11 +6,10 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface BusinessPostRepository extends CrudRepository<Posts, Integer> {
     
-    // List<Posts> findPostsByBusiness(Business bus);
+    List<Posts> findPostsByBusiness(Business bus);
 
 }
