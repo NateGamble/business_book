@@ -4,7 +4,7 @@ import com.revature.exceptions.InvalidRequestException;
 import com.revature.exceptions.ResourceNotFoundException;
 import com.revature.exceptions.ResourcePersistenceException;
 import com.revature.models.Business;
-import com.revature.models.BusinessReviews;
+import com.revature.models.Review;
 import com.revature.models.Role;
 import com.revature.models.User;
 import com.revature.repos.BusinessRepository;
