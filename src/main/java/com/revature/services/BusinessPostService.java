@@ -1,7 +1,6 @@
 package com.revature.services;
 
 import com.revature.exceptions.InvalidRequestException;
-import com.revature.exceptions.ResourcePersistenceException;
 import com.revature.models.*;
 import com.revature.repos.BusinessPostRepository;
 
@@ -31,14 +30,14 @@ public class BusinessPostService {
 
     public void createPost(Posts post) {
         if (!isPostValid(post))
-            throw new ResourcePersistenceException();
+            throw new InvalidRequestException();
         
         repo.save(post);
     }
 
     public void editPost(Posts post) {
         if (!isPostValid(post))
-            throw new ResourcePersistenceException();
+            throw new InvalidRequestException();
         
         repo.save(post);
     }
