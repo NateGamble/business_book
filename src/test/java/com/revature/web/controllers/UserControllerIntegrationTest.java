@@ -79,7 +79,7 @@ public class UserControllerIntegrationTest {
         minUser.setPassword("p");
         minUser.setFirstName("f");
         minUser.setLastName("l");
-        minUser.setEmail(minUser.getEmail());
+        minUser.setEmail("e@m.com");
 
         list = List.of(fullUser, minUser);
     }
@@ -123,7 +123,6 @@ public class UserControllerIntegrationTest {
     public void test_getUserByEmail_givenValidEmail() throws Exception {
         when(userRepoMock.findUserByEmail(minUser.getEmail())).thenReturn(Optional.of(minUser));
 
-        // For some reason this tries to call /users/email, not /users/email/{email}
         this.mockMvc.perform(MockMvcRequestBuilders.get("/users/email/{email}", minUser.getEmail()))
                     .andDo(print())
                     .andExpect(status().isOk())

@@ -67,11 +67,6 @@ public class UserController {
         return userService.getUserByEmail(email);
     }
 
-    @GetMapping(path = "/email")
-    public String testEmail() {
-        return "Why is this being called";
-    }
-
     @PostMapping(path = "/create", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public void addUser(@RequestBody User user) {
         user.setPassword(BCrypt.withDefaults().hashToString(12, user.getPassword().toCharArray()));
