@@ -27,6 +27,7 @@ public class UserService {
         this.userRepo = repo;
     }
 
+    //DONE TESTING
     public User getUserById(int id) {
         if (id <= 0 ) {
             throw new InvalidRequestException();
@@ -34,37 +35,34 @@ public class UserService {
         return userRepo.findById(id).orElseThrow(ResourceNotFoundException::new);
     }
 
+    //DONE TESTING
     public void register(User newUser) {
 
         if (!isUserValid(newUser)) throw new InvalidRequestException();
 
         if (userRepo.findUserByUsername(newUser.getUsername()).isPresent()) {
-            //throw new ResourcePersistenceException("Username is already in use!");
+            throw new ResourcePersistenceException("Username is already in use!");
         }
 
         newUser.setPassword(BCrypt.withDefaults().hashToString(12, newUser.getPassword().toCharArray()));
         newUser.setRegisterDatetime(Timestamp.valueOf(LocalDateTime.now()));
         newUser.setActive(true);
         userRepo.save(newUser);
-
     }
 
+    //DONE TESTING
     public List<User> getAllUsers() {
 
-        List<User> users = new ArrayList<>();
-
-        Iterable<User> userIterable = userRepo.findAll();
-
-        userIterable.forEach(users::add);
+        List<User> users = (List<User>) userRepo.findAll();
 
         if (users.isEmpty()) {
-            System.out.println("did we get here?");
+            //System.out.println("did we get here?");
             throw new ResourceNotFoundException();
         }
 
         return users;
-
     }
+
 
     public List<User> getUsersByRole(Role role) {
 
@@ -166,11 +164,15 @@ public class UserService {
 
     }
 
-    public void updateProfile(User updatedUser) {
+    public boolean updateProfile(User updatedUser) {
+        boolean updated;
 
         if (!isUserValid(updatedUser)) {
             throw new InvalidRequestException();
         }
+
+        // Need to make a way to check if a user is being updated or created (put request can do both)
+        updated = true;
 
         Optional<User> persistedUser = userRepo.findUserByUsername(updatedUser.getUsername());
         if (persistedUser.isPresent() && persistedUser.get().getUserId() != updatedUser.getUserId()) {
@@ -178,6 +180,8 @@ public class UserService {
         }
 
         userRepo.save(updatedUser);
+
+        return updated;
 
     }
 
