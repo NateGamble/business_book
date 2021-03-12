@@ -1,5 +1,6 @@
 package com.revature.services;
 
+import at.favre.lib.crypto.bcrypt.BCrypt;
 import com.revature.exceptions.InvalidRequestException;
 import com.revature.exceptions.ResourceNotFoundException;
 import com.revature.exceptions.ResourcePersistenceException;
@@ -9,6 +10,8 @@ import com.revature.repos.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -39,7 +42,10 @@ public class UserService {
             //throw new ResourcePersistenceException("Username is already in use!");
         }
 
-        newUser.setRole(Role.USER); //setRole(Role.BASIC_USER);
+        newUser.setPassword(BCrypt.withDefaults().hashToString(12, newUser.getPassword().toCharArray()));
+        newUser.setRegisterDatetime(Timestamp.valueOf(LocalDateTime.now()));
+        newUser.setRole(Role.USER);
+        newUser.setActive(true);
         userRepo.save(newUser);
 
     }

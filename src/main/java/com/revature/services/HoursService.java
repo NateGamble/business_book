@@ -6,9 +6,11 @@ import com.revature.models.Business;
 import com.revature.models.Hours;
 import com.revature.repos.HoursRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class HoursService {
 
     private HoursRepository repo;

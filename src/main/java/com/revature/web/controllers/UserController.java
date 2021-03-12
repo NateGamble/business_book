@@ -69,9 +69,6 @@ public class UserController {
 
     @PostMapping(path = "/create", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public void addUser(@RequestBody User user) {
-        user.setPassword(BCrypt.withDefaults().hashToString(12, user.getPassword().toCharArray()));
-        user.setRegisterDatetime(Timestamp.valueOf(LocalDateTime.now()));
-        user.setActive(true);
         userService.register(user);
     }
 
