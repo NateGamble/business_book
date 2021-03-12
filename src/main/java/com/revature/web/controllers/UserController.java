@@ -2,6 +2,7 @@ package com.revature.web.controllers;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
 import com.revature.dtos.Principal;
+import com.revature.exceptions.ResourceNotFoundException;
 import com.revature.models.User;
 import com.revature.services.UserService;
 import com.revature.util.JwtParser;
@@ -137,17 +138,19 @@ public class UserController {
     }
 
     /**
-     * Handles an HTTPRequest for updating a User
+     * Handles an HTTPRequest for updating a User. Expects a userId value if
+     * an update is desired, and no userId value if an insert is desired.
      * @param user the user to update
      * @param resp the HttpServletResponse object
      */
     @PutMapping()
     public void updateUser(@RequestBody User user, HttpServletResponse resp) {
-        boolean updated = userService.updateProfile(user);
-        if (updated) {
-            resp.setStatus(204);
+        if (user.getUserId() == null) {
+            resp.setStatus(201);
+            userService.register(user);
         } else {
-            resp.setStatus(200);
+            resp.setStatus(204);
+            userService.updateProfile(user);
         }
     }
 
