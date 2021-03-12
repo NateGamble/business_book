@@ -24,6 +24,7 @@ public class UserService {
         this.userRepo = repo;
     }
 
+    //DONE TESTING
     public User getUserById(int id) {
         if (id <= 0 ) {
             throw new InvalidRequestException();
@@ -31,35 +32,31 @@ public class UserService {
         return userRepo.findById(id).orElseThrow(ResourceNotFoundException::new);
     }
 
+    //DONE TESTING
     public void register(User newUser) {
 
         if (!isUserValid(newUser)) throw new InvalidRequestException();
 
         if (userRepo.findUserByUsername(newUser.getUsername()).isPresent()) {
-            //throw new ResourcePersistenceException("Username is already in use!");
+            throw new ResourcePersistenceException("Username is already in use!");
         }
-
-        newUser.setRole(Role.USER); //setRole(Role.BASIC_USER);
+        newUser.setRole(Role.USER);
         userRepo.save(newUser);
-
     }
 
+    //DONE TESTING
     public List<User> getAllUsers() {
 
-        List<User> users = new ArrayList<>();
-
-        Iterable<User> userIterable = userRepo.findAll();
-
-        userIterable.forEach(users::add);
+        List<User> users = (List<User>) userRepo.findAll();
 
         if (users.isEmpty()) {
-            System.out.println("did we get here?");
+            //System.out.println("did we get here?");
             throw new ResourceNotFoundException();
         }
 
         return users;
-
     }
+
 
     public List<User> getUsersByRole(Role role) {
 

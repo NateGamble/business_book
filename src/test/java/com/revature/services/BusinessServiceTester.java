@@ -27,7 +27,7 @@ import java.sql.Timestamp;
 
 
 //@RunWith(MockitoJUnitRunner.class)
-public class BusinessServiceTests {
+public class BusinessServiceTester {
 
     Business bizOne;
     Business bizTwo;
@@ -100,7 +100,6 @@ public class BusinessServiceTests {
 
         assertEquals(bizServices.getBusinessById(bizTwo.getId()), bizTwo);
         verify(bizRepo, times(1)).findById(bizTwo.getId());
-        assertEquals(bizServices.getBusinessById(bizTwo.getId()), bizTwo);
     }
 
     @Test
