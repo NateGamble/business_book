@@ -20,8 +20,15 @@
  <input type="text" id="email" name="email" value="here@there.com"><br>
 
  <label for="phone">Phone:</label><br>
- <input type="text" id="phone" name="phone" value="111111111"><br>
+ <input type="text" id="phone" name="phone" value="111111111"><br><br>
 
+ <label for> What Type of Account is this?</label><br>
+ <input type="radio" id="user" name="accountType" value="USER">
+ <label for="user"> - User</label><br>
+
+ <input type="radio" id="owner" name="accountType" value="OWNER">
+ <label for="owner"> - Owner</label>
+ <br><br>
  <button onclick="SendData()">Send JSON</button> 
 
 
@@ -42,8 +49,18 @@
         let lastName = document.querySelector('#lname'); 
 		let email = document.querySelector('#email'); 
         let phone = document.querySelector('#phone'); 
+        let role = "User"; 
+        let radios=document.getElementsByName('accountType');
+        for (var i = 0, length = radios.length; i < length; i++) {
+            if (radios[i].checked) {
+                role=radios[i].value;
+                break;
+            }
+        }
+
+        //let role = "User"; 
     	let xhr = new XMLHttpRequest(); // Creating a XHR object 
-        let url = "http://localhost:5000/users/create"; 
+        let url = "http://localhost:5000/users"; 
         
             
             xhr.open("POST", url, true); // open a connection 
@@ -65,7 +82,8 @@
 				"lastName": lastName.value,
 				"email": email.value, 
 				"phoneNumber": phone.value,
-				"active": true
+				"active": true,
+                "role":role
 			}); 
   
             // Sending data with the request 

@@ -1,15 +1,15 @@
 $(document).ready(function(){
 	
 	$("#loginform").click(function(){
-		$("#body").load("resources/loginform.html");
+		$("#info-container").load("resources/loginform.html");
 	});
 	
 	$("#registerform").click(function(){
-    	$("#body").load("resources/registerform.html");
+    	$("#info-container").load("resources/registerform.html");
     });
 
     $("#userpage").click(function(){
-    	$("#body").load("resources/users.html");
+    	$("#info-container").load("resources/users.html");
     });
 	
 });
