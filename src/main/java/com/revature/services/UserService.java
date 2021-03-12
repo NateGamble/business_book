@@ -1,5 +1,6 @@
 package com.revature.services;
 
+import at.favre.lib.crypto.bcrypt.BCrypt;
 import com.revature.exceptions.InvalidRequestException;
 import com.revature.exceptions.ResourceNotFoundException;
 import com.revature.exceptions.ResourcePersistenceException;
@@ -9,6 +10,8 @@ import com.revature.repos.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -40,7 +43,10 @@ public class UserService {
         if (userRepo.findUserByUsername(newUser.getUsername()).isPresent()) {
             throw new ResourcePersistenceException("Username is already in use!");
         }
-        newUser.setRole(Role.USER);
+
+        newUser.setPassword(BCrypt.withDefaults().hashToString(12, newUser.getPassword().toCharArray()));
+        newUser.setRegisterDatetime(Timestamp.valueOf(LocalDateTime.now()));
+        newUser.setActive(true);
         userRepo.save(newUser);
     }
 
@@ -150,15 +156,10 @@ public class UserService {
 
     }
 
-    public boolean updateProfile(User updatedUser) {
-        boolean updated;
-
+    public void updateProfile(User updatedUser) {
         if (!isUserValid(updatedUser)) {
             throw new InvalidRequestException();
         }
-
-        // Need to make a way to check if a user is being updated or created (put request can do both)
-        updated = true;
 
         Optional<User> persistedUser = userRepo.findUserByUsername(updatedUser.getUsername());
         if (persistedUser.isPresent() && persistedUser.get().getUserId() != updatedUser.getUserId()) {
@@ -167,12 +168,17 @@ public class UserService {
 
         userRepo.save(updatedUser);
 
-        return updated;
-
     }
 
     public void delete(User user) {
         userRepo.delete(user);
+    }
+
+    public User getUserByEmail (String email) {
+        if (email == null || email.trim().equals("")) {
+            throw new InvalidRequestException();
+        }
+        return userRepo.findUserByEmail(email).orElseThrow(ResourceNotFoundException::new);
     }
 
     public Boolean isUserValid(User user) {

@@ -53,6 +53,14 @@ public class BusinessService {
         return businessRepo.findBusinessByLocation(location).orElseThrow(ResourceNotFoundException::new);
     }
 
+    public List<Business> getBusinessesByType(String type) {
+        if (type == null || type.trim().equals("") ) {
+            throw new InvalidRequestException();
+        }
+
+        return businessRepo.findBusinessesByBusinessType(type);
+    }
+
     public Business getBusinessByRegistrationDate(Timestamp time) {
         if (time == null) {
             throw new InvalidRequestException();
@@ -98,6 +106,14 @@ public class BusinessService {
         }
 
         return ownerBusinesses;
+    }
+
+    public void deleteBusinessById(int id) {
+        if (id < 1) {
+            throw new InvalidRequestException();
+        }
+
+        businessRepo.deleteById(id);
     }
 
     public Boolean isBusinessValid(Business business) {

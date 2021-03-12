@@ -31,7 +31,9 @@ public class JwtParser {
 
         int id = Integer.parseInt(claims.getId());
         String username = claims.getSubject();
-        Role role = claims.get("role", Role.class);
+        String roleString = (String) claims.get("role");
+        Role role = Role.getByName(roleString);
+        //Role role = claims.get("role", Role.class);
         return new Principal(id, username, role);
 
     }
