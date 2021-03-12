@@ -242,7 +242,7 @@ public class UserControllerIntegrationTest {
             .andExpect(status().isNoContent());
     }
 
-    @Test @Ignore
+    @Test
     public void testUpdate_onValidNewUser() throws Exception {
         User newUser = new User();
         newUser.setUsername("newUser");
@@ -262,6 +262,7 @@ public class UserControllerIntegrationTest {
             "\"role\":\"" + newUser.getRole().toString().toUpperCase() + "\"" + 
             "}";
 
+        // expected 201, is 204
         mockMvc.perform(MockMvcRequestBuilders.put("/users")
             .contentType(MediaType.APPLICATION_JSON)
             .content(newUserJson))
