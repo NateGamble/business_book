@@ -23,8 +23,11 @@ import static org.mockito.Mockito.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import java.sql.Timestamp;
+
+
 //@RunWith(MockitoJUnitRunner.class)
-public class BusinessServiceTests {
+public class BusinessServiceTester {
 
     Business bizOne;
     Business bizTwo;
@@ -69,73 +72,128 @@ public class BusinessServiceTests {
     }
 
 
-
-    /**
-     * ADMIN FUNCTIONALITY
-     */
-    //**
     @Test
-    public void removeBusinessReview() {
-
-    }
-
-    @Test
-    public void getFlaggedReviews() {
-    }
-
-    //**
-    @Test
+    @DisplayName("Verifying getAllBusinesses() works as expected and pulls all businesses")
     public void getAllBusinesses() {
-        EasyRandom generator = new EasyRandom();
-        List<Business> list = new ArrayList<>();
-        Business bizOne = generator.nextObject(Business.class);
-        Business bizTwo = generator.nextObject(Business.class);
-        Business bizThree = generator.nextObject(Business.class);
-        list.add(bizOne);
-        list.add(bizTwo);
-        list.add(bizThree);
-
         when(bizRepo.findAll()).thenReturn(list);
 
-        //test
-        List<Business> bizList = bizServices.getAllBusinesses();
-
-        assertEquals(3, bizList.size());
+        assertEquals(bizServices.getAllBusinesses(), list);
         verify(bizRepo, times(1)).findAll();
-        List<Business> bizs = bizServices.getAllBusinesses();
-
-        assertFalse(bizs.isEmpty());
+        assertEquals(3, bizServices.getAllBusinesses().size());
+        verify(bizRepo, times(2)).findAll();
     }
 
+    @Test
+    @DisplayName("Verifying getAllBusinesses() throws error when no businesses found")
+    public void getAllBusinessesButNoBusinesses() {
+        list.removeAll(list);
+        when(bizRepo.findAll()).thenReturn(list);
+
+        assertThrows(ResourceNotFoundException.class, () -> bizServices.getAllBusinesses());
+    }
 
     @Test
-    @DisplayName("Verifying getBusinessId() works as expected and pulls business")
+    @DisplayName("Verifying getBusinessById() works as expected and pulls business")
     public void getBusinessById() {
         //create a 'proxy call' for the business repository 'findById()' method to hone in on the service class
         when(bizRepo.findById(bizTwo.getId())).thenReturn(java.util.Optional.of(bizTwo));
 
-        //test
-        Business checkBusiness = bizServices.getBusinessById(bizTwo.getId());
-
-        assertEquals(checkBusiness.getId(), bizTwo.getId());
+        assertEquals(bizServices.getBusinessById(bizTwo.getId()), bizTwo);
         verify(bizRepo, times(1)).findById(bizTwo.getId());
-        assertEquals(checkBusiness, bizTwo);
-
-        assertThrows(InvalidRequestException.class, () -> bizServices.getBusinessById(-1));
     }
-
 
     @Test
-    @DisplayName("Verifying errors thrown on getBusinessId() as expected")
+    @DisplayName("Verifying errors thrown on getBusinessById() as expected")
     public void getBusinessByIdCheckInvalidId() {
-        //create a method stub for the business repository 'findById()' method to hone in on the service class
-        when(bizRepo.findById(bizTwo.getId())).thenReturn(java.util.Optional.of(bizTwo));
         //check valid id not in db
         assertThrows(ResourceNotFoundException.class, () -> bizServices.getBusinessById(13));
+        verify(bizRepo, times(1)).findById(13);
         //check negative id entry
         assertThrows(InvalidRequestException.class, () -> bizServices.getBusinessById(-1));
+        verify(bizRepo, times(0)).findById(-1);
     }
 
+    @Test
+    @DisplayName("Verifying getBusinessByRegistrationDate() works as expected and pulls business")
+    public void getBusinessByRegistrationDate() {
+        //create a 'proxy call' for the business repository 'findById()' method to hone in on the service class
+        when(bizRepo.findBusinessByRegisterDatetime(bizTwo.getRegisterDatetime())).thenReturn(java.util.Optional.of(bizTwo));
+
+        assertEquals(bizServices.getBusinessByRegistrationDate(bizTwo.getRegisterDatetime()), bizTwo);
+        verify(bizRepo, times(1)).findBusinessByRegisterDatetime(bizTwo.getRegisterDatetime());
+    }
+
+    @Test
+    @DisplayName("Verifying errors thrown on getBusinessByRegistrationDate() when business registration time is null")
+    public void getBusinessByRegistrationDateNotNull() {
+        Timestamp sometime = null;
+        assertThrows(InvalidRequestException.class, () -> bizServices.getBusinessByRegistrationDate(sometime));
+
+        assertThrows(ResourceNotFoundException.class, () -> bizServices.getBusinessByRegistrationDate(bizOne.getRegisterDatetime()));
+    }
+
+    @Test
+    @DisplayName("Verifying getBusinessLocation() works as expected and pulls business")
+    public void getBusinessByLocation() {
+        //create a 'proxy call' for the business repository 'findById()' method to hone in on the service class
+        when(bizRepo.findBusinessByLocation(bizTwo.getLocation())).thenReturn(java.util.Optional.of(bizTwo));
+
+        assertEquals(bizServices.getBusinessByLocation(bizTwo.getLocation()), bizTwo);
+        verify(bizRepo, times(1)).findBusinessByLocation(bizTwo.getLocation());
+    }
+
+    @Test
+    @DisplayName("Verifying error thrown on getBusinessLocation() for null or empty string location")
+    public void getBusinessByLocationNotNull() {
+        String nullLocation = null;
+        assertThrows(InvalidRequestException.class, () -> bizServices.getBusinessByLocation(nullLocation));
+        String emptyLocation = "";
+        assertThrows(InvalidRequestException.class, () -> bizServices.getBusinessByLocation(emptyLocation));
+
+        assertThrows(ResourceNotFoundException.class, () -> bizServices.getBusinessByLocation(bizOne.getLocation()));
+    }
+
+    @Test
+    @DisplayName("Verifying getBusinessByBusinessName() works as expected and pulls business")
+    public void getBusinessByName() {
+        //create a 'proxy call' for the business repository 'findById()' method to hone in on the service class
+        when(bizRepo.findBusinessByBusinessName(bizTwo.getBusinessName())).thenReturn(java.util.Optional.of(bizTwo));
+
+        assertEquals(bizServices.getBusinessByBusinessName(bizTwo.getBusinessName()), bizTwo);
+        verify(bizRepo, times(1)).findBusinessByBusinessName(bizTwo.getBusinessName());
+    }
+
+    @Test
+    @DisplayName("Verifying error thrown on getBusinessByName() for null or empty string name")
+    public void getBusinessByNameNotNull() {
+        String nullName = null;
+        assertThrows(InvalidRequestException.class, () -> bizServices.getBusinessByBusinessName(nullName));
+        String emptyName = "";
+        assertThrows(InvalidRequestException.class, () -> bizServices.getBusinessByBusinessName(emptyName));
+
+        assertThrows(ResourceNotFoundException.class, () -> bizServices.getBusinessByBusinessName(bizOne.getBusinessName()));
+    }
+
+    @Test
+    @DisplayName("Verifying getBusinessByEmail works as expected and pulls business")
+    public void getBusinessByEmail() {
+        //create a 'proxy call' for the business repository 'findById()' method to hone in on the service class
+        when(bizRepo.findBusinessByEmail(bizTwo.getEmail())).thenReturn(java.util.Optional.of(bizTwo));
+
+        assertEquals(bizServices.getBusinessByEmail(bizTwo.getEmail()), bizTwo);
+        verify(bizRepo, times(1)).findBusinessByEmail(bizTwo.getEmail());
+    }
+
+    @Test
+    @DisplayName("Verifying error thrown on getBusinessByEmail for null or empty string email")
+    public void getBusinessByEmailNotNull() {
+        String nullEmail = null;
+        assertThrows(InvalidRequestException.class, () -> bizServices.getBusinessByEmail(nullEmail));
+        String emptyEmail = "";
+        assertThrows(InvalidRequestException.class, () -> bizServices.getBusinessByEmail(emptyEmail));
+
+        assertThrows(ResourceNotFoundException.class, () -> bizServices.getBusinessByEmail(bizOne.getEmail()));
+    }
 
     //ALSO AN OWNER FUNCTION*
     //FAILING BECAUSE WE HAVE A GETUSERID CALL IN BUSINESS TOSTRING METHOD THAT IS WORKING ON AN OWNER
@@ -176,30 +234,6 @@ public class BusinessServiceTests {
     //ALSO AN OWNER FUNCTION*
     @Test
     public void deleteBusiness() {
-        when(bizRepo.save(bizOne)).thenReturn(bizOne);
-        when(bizRepo.save(bizTwo)).thenReturn(bizTwo);
-        when(bizRepo.save(bizThree)).thenReturn(bizThree);
-        when(bizRepo.findAll()).thenReturn(list);
-
-        //test
-        bizServices.addBusiness(bizOne);
-        bizServices.addBusiness(bizTwo);
-        bizServices.addBusiness(bizThree);
-
-        assertEquals(3, bizServices.getAllBusinesses().size());
-        verify(bizRepo, times(1)).save(bizOne);
-        verify(bizRepo, times(1)).save(bizTwo);
-        verify(bizRepo, times(1)).save(bizThree);
-        List<Business> bizs = bizServices.getAllBusinesses();
-        assertFalse(bizs.isEmpty());
-    }
-
-    /**
-     * OWNER FUNCTIONALITY
-     */
-    @Test
-    public void postBusinessUpdate() {
-
     }
 
     @Test
@@ -209,100 +243,24 @@ public class BusinessServiceTests {
         ownerBusinesses.add(bizTwo);
         when(bizRepo.findBusinessesByOwner(owner)).thenReturn(ownerBusinesses);
 
+        assertEquals(bizServices.findBusinessesByOwner(owner), ownerBusinesses);
+        verify(bizRepo, times(1)).findBusinessesByOwner(owner);
     }
 
     @Test
     @DisplayName("Verifying error thrown on findBusinessByOwner for null business owner")
     public void findBusinessByOwnerNotNull() {
-
-    }
-
-    /**
-     * USER FUNCTIONALITY
-     */
-
-    //@USER LOCATION = 10 mile range from users current position
-    //@SET LOCATION = range specified by user from their current position
-
-    @Test
-    public void getBusinessesByUserLocation() {
-        EasyRandom generator = new EasyRandom();
-        List<Business> list = new ArrayList<>();
-        Business bizOne = generator.nextObject(Business.class);
-
-        list.add(bizOne);
-
-        when(bizRepo.findAll()).thenReturn(list);
-
-        //test
-        List<Business> bizList = bizServices.getAllBusinesses();
-
-        assertEquals(1, bizList.size());
-        verify(bizRepo, times(1)).findAll();
-        List<Business> bizs = bizServices.getAllBusinesses();
-
-        assertFalse(bizs.isEmpty());
+        assertThrows(InvalidRequestException.class, () -> bizServices.findBusinessesByOwner(badOwner));
     }
 
     @Test
-    public void getBusinessesBySetLocation() {
+    @DisplayName("Verifying error thrown on findBusinessByOwner for no owner business found")
+    public void findBusinessByOwnerNoBusinesses() {
+        List<Business> ownerBusinesses = new ArrayList<>();
 
-    }
+        when(bizRepo.findBusinessesByOwner(owner)).thenReturn(ownerBusinesses);
 
-    @Test
-    public void getBusinessesByUserLocationAndType() {
-        EasyRandom generator = new EasyRandom();
-        List<Business> list = new ArrayList<>();
-        Business bizOne = generator.nextObject(Business.class);
-
-        list.add(bizOne);
-
-        when(bizRepo.findAll()).thenReturn(list);
-
-        //test
-        List<Business> bizList = bizServices.getAllBusinesses();
-
-        assertEquals(1, bizList.size());
-        verify(bizRepo, times(1)).findAll();
-        List<Business> bizs = bizServices.getAllBusinesses();
-
-        assertFalse(bizs.isEmpty());
-    }
-
-    @Test
-    public void getBusinessesBySetLocationAndType() {
-
-    }
-
-    /**
-     * Test to retrieve list of businesses by default user location and their open/closed (oc) status
-     */
-    @Test
-    public void getBusinessesByUserLocationAndOCStatus() {
-
-    }
-
-    /**
-     * Test to retrieve list of businesses by set location and their open/closed (oc) status
-     */
-    @Test
-    public void getBusinessesBySetLocationAndOCStatus() {
-
-    }
-
-    @Test
-    public void markBusinessDisliked() {
-
-    }
-
-    @Test
-    public void markBusinessFavorite() {
-
-    }
-
-    @Test
-    public void markReviewInnapropriate() {
-
+        assertThrows(ResourceNotFoundException.class, () -> bizServices.findBusinessesByOwner(owner));
     }
 
     //Internal function
