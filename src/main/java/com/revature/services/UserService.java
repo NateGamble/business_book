@@ -157,6 +157,7 @@ public class UserService {
             throw new InvalidRequestException();
         }
 
+        // Will throw issues if user id is null
         Optional<User> idUser = userRepo.findById(updatedUser.getUserId());
         if (idUser.isEmpty()) {
             updated = false;
