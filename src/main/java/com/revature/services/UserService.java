@@ -163,13 +163,8 @@ public class UserService {
             throw new InvalidRequestException();
         }
 
-        // Will throw issues if user id is null
-        Optional<User> idUser = userRepo.findById(updatedUser.getUserId());
-        if (idUser.isEmpty()) {
-            updated = false;
-        } else {
-            updated = true;
-        }
+        // Need to make a way to check if a user is being updated or created (put request can do both)
+        updated = true;
 
         Optional<User> persistedUser = userRepo.findUserByUsername(updatedUser.getUsername());
         if (persistedUser.isPresent() && persistedUser.get().getUserId() != updatedUser.getUserId()) {
