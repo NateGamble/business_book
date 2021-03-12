@@ -1,0 +1,75 @@
+			<center><h2>Registration Form</h2></center>
+
+		
+
+<p>
+<br><br>
+ <label for="username">Username:</label><br>
+ <input type="text" id="username" name="username" value="0x"><br>
+
+ <label for="password">Password:</label><br>
+ <input type="text" id="password" name="password" value="p455"><br>
+
+ <label for="fname">First name:</label><br>
+ <input type="text" id="fname" name="fname" value="Jahnny"><br>
+
+ <label for="lname">Last name:</label><br>
+ <input type="text" id="lname" name="lname" value="Jay"><br>
+
+ <label for="email">Email:</label><br>
+ <input type="text" id="email" name="email" value="here@there.com"><br>
+
+ <label for="phone">Phone:</label><br>
+ <input type="text" id="phone" name="phone" value="111111111"><br>
+
+ <button onclick="SendData()">Send JSON</button> 
+
+
+</p>
+
+
+
+<div id="data"></div>
+
+<script>
+
+    function SendData() {
+
+		let result = document.querySelector('#data'); 
+        let username = document.querySelector('#username'); 
+        let password = document.querySelector('#password'); 
+		let firstName = document.querySelector('#fname'); 
+        let lastName = document.querySelector('#lname'); 
+		let email = document.querySelector('#email'); 
+        let phone = document.querySelector('#phone'); 
+    	let xhr = new XMLHttpRequest(); // Creating a XHR object 
+        let url = "http://localhost:5000/users/create"; 
+        
+            
+            xhr.open("POST", url, true); // open a connection 
+  
+            // Set the request header i.e. which type of content you are sending 
+            xhr.setRequestHeader("Content-Type", "application/json"); 
+
+            
+            xhr.onreadystatechange = function () { // Create a state change callback 
+                if (xhr.readyState === 4 && xhr.status === 200) { 
+                    result.innerHTML = this.responseText; // Print received data from server 
+                } 
+            }; 
+            
+            var data = JSON.stringify({ // Converting JSON data to string 
+				"username": username.value, 
+				"password": password.value,
+				"firstName": firstName.value, 
+				"lastName": lastName.value,
+				"email": email.value, 
+				"phoneNumber": phone.value,
+				"active": true
+			}); 
+  
+            // Sending data with the request 
+            xhr.send(data); 
+    }
+
+</script>	
