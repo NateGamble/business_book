@@ -164,15 +164,10 @@ public class UserService {
 
     }
 
-    public boolean updateProfile(User updatedUser) {
-        boolean updated;
-
+    public void updateProfile(User updatedUser) {
         if (!isUserValid(updatedUser)) {
             throw new InvalidRequestException();
         }
-
-        // Need to make a way to check if a user is being updated or created (put request can do both)
-        updated = true;
 
         Optional<User> persistedUser = userRepo.findUserByUsername(updatedUser.getUsername());
         if (persistedUser.isPresent() && persistedUser.get().getUserId() != updatedUser.getUserId()) {
@@ -181,12 +176,17 @@ public class UserService {
 
         userRepo.save(updatedUser);
 
-        return updated;
-
     }
 
     public void delete(User user) {
         userRepo.delete(user);
+    }
+
+    public User getUserByEmail (String email) {
+        if (email == null || email.trim().equals("")) {
+            throw new InvalidRequestException();
+        }
+        return userRepo.findUserByEmail(email).orElseThrow(ResourceNotFoundException::new);
     }
 
     public Boolean isUserValid(User user) {
