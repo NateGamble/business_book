@@ -44,7 +44,6 @@ public class UserService {
 
         newUser.setPassword(BCrypt.withDefaults().hashToString(12, newUser.getPassword().toCharArray()));
         newUser.setRegisterDatetime(Timestamp.valueOf(LocalDateTime.now()));
-        newUser.setRole(Role.USER);
         newUser.setActive(true);
         userRepo.save(newUser);
 

@@ -7,6 +7,7 @@ import com.revature.services.UserService;
 import com.revature.util.JwtParser;
 import com.revature.util.Secured;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -67,7 +68,8 @@ public class UserController {
         return null; //return userService.getUserByEmail(email);
     }
 
-    @PostMapping(path = "/create", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public void addUser(@RequestBody User user) {
         userService.register(user);
     }
