@@ -239,10 +239,10 @@ public class UserControllerIntegrationTest {
         mockMvc.perform(MockMvcRequestBuilders.put("/users")
             .contentType(MediaType.APPLICATION_JSON)
             .content(minUserJson))
-            .andExpect(status().isOk());
+            .andExpect(status().isNoContent());
     }
 
-    @Test
+    @Test @Ignore
     public void testUpdate_onValidNewUser() throws Exception {
         User newUser = new User();
         newUser.setUsername("newUser");
@@ -265,7 +265,7 @@ public class UserControllerIntegrationTest {
         mockMvc.perform(MockMvcRequestBuilders.put("/users")
             .contentType(MediaType.APPLICATION_JSON)
             .content(newUserJson))
-            .andExpect(status().isOk());
+            .andExpect(status().isCreated());
     }
 
     @Test
@@ -288,6 +288,20 @@ public class UserControllerIntegrationTest {
             .contentType(MediaType.APPLICATION_JSON)
             .content(minUserJson))
             .andExpect(status().isConflict());
+    }
+
+    @Test
+    public void testDelete_withValidUserId() throws Exception {
+        when(userRepoMock.findById(fullUser.getUserId())).thenReturn(Optional.of(fullUser));
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/users/id/{id}", fullUser.getUserId()))
+            .andExpect(status().isOk());
+    }
+
+    @Test
+    public void testDelete_withInvalidUserId() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.delete("/users/id/{id}", -1))
+            .andExpect(status().isBadRequest());
     }
 
 }
