@@ -193,8 +193,6 @@ public class UserControllerIntegrationTest {
             "\"role\":\"" + newUser.getRole().toString().toUpperCase() + "\"" + 
             "}";
 
-        System.out.println(newUserJson);
-
         mockMvc.perform(MockMvcRequestBuilders.post("/users")
             .contentType(MediaType.APPLICATION_JSON)
             .content(newUserJson))
@@ -217,7 +215,6 @@ public class UserControllerIntegrationTest {
             "\"email\":\"" + newUser.getEmail() + "\"" +
             "}";
 
-        // should just hit /users, not /users/create
         mockMvc.perform(MockMvcRequestBuilders.post("/users")
             .contentType(MediaType.APPLICATION_JSON)
             .content(newUserJson))
@@ -225,7 +222,7 @@ public class UserControllerIntegrationTest {
     }
 
     @Test
-    public void testUpdate_onValidUser() throws Exception {
+    public void testUpdate_onValidUpdatedUser() throws Exception {
         minUser.setRole(Role.ADMIN);
         when(userRepoMock.save(minUser)).thenReturn(null);
 
@@ -239,14 +236,58 @@ public class UserControllerIntegrationTest {
             "\"role\":\"" + minUser.getRole().toString().toUpperCase() + "\"" + 
             "}";
 
-        System.out.println(minUserJson);
-
         mockMvc.perform(MockMvcRequestBuilders.put("/users")
             .contentType(MediaType.APPLICATION_JSON)
             .content(minUserJson))
             .andExpect(status().isOk());
+    }
 
+    @Test
+    public void testUpdate_onValidNewUser() throws Exception {
+        User newUser = new User();
+        newUser.setUsername("newUser");
+        newUser.setPassword("pass");
+        newUser.setFirstName("first");
+        newUser.setLastName("last");
+        newUser.setEmail("email@mail.com");
+        newUser.setRole(Role.USER);
+        when(userRepoMock.save(newUser)).thenReturn(null);
 
+        String newUserJson = "{" +
+            "\"username\":\"" + newUser.getUsername() + "\", " + 
+            "\"password\":\"" + newUser.getPassword() + "\", " + 
+            "\"firstName\":\"" + newUser.getFirstName() + "\", " + 
+            "\"lastName\":\"" + newUser.getLastName() + "\", " + 
+            "\"email\":\"" + newUser.getEmail() + "\", " + 
+            "\"role\":\"" + newUser.getRole().toString().toUpperCase() + "\"" + 
+            "}";
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/users")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(newUserJson))
+            .andExpect(status().isOk());
+    }
+
+    @Test
+    public void testUpdate_withInvalidUser() throws Exception {
+        minUser.setRole(Role.ADMIN);
+        when(userRepoMock.save(minUser)).thenReturn(null);
+        when(userRepoMock.findUserByUsername(fullUser.getUsername())).thenReturn(Optional.of(fullUser));
+
+        String minUserJson = "{" +
+            "\"userId\":\"" + minUser.getUserId() + "\", " + 
+            "\"username\":\"" + fullUser.getUsername() + "\", " + 
+            "\"password\":\"" + minUser.getPassword() + "\", " + 
+            "\"firstName\":\"" + minUser.getFirstName() + "\", " + 
+            "\"lastName\":\"" + minUser.getLastName() + "\", " + 
+            "\"email\":\"" + minUser.getEmail() + "\", " + 
+            "\"role\":\"" + minUser.getRole().toString().toUpperCase() + "\"" + 
+            "}";
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/users")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(minUserJson))
+            .andExpect(status().isConflict());
     }
 
 }
