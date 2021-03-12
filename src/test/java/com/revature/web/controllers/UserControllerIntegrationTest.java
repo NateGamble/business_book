@@ -160,9 +160,7 @@ public class UserControllerIntegrationTest {
                     .andExpect(jsonPath("$.email").value(fullUser.getEmail()))
                     .andExpect(jsonPath("$.active").value(fullUser.isActive()))
                     .andExpect(jsonPath("$.phoneNumber").value(fullUser.getPhoneNumber()))
-                    .andExpect(jsonPath("$.role").value(fullUser.getRole()))
-                    .andExpect(jsonPath("$.registerDatetime").value(fullUser.getRegisterDatetime()))
-                    .andExpect(jsonPath("$.favorites").value(fullUser.getFavorites()));
+                    .andExpect(jsonPath("$.role").value(fullUser.getRole().toString().toUpperCase()));
     }
 
     @Test
@@ -174,9 +172,16 @@ public class UserControllerIntegrationTest {
 
     @Test @Ignore
     public void test_createNewUser_givenValidUser() throws Exception {
-        // mockMvc.perform(MockMvcRequestBuilders.post("/users/create")
-        //             .contentType(MediaType.APPLICATION_JSON_VALUE)
-        //             .content("{}"));
+        mockMvc.perform(MockMvcRequestBuilders.post("/users/create")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content("{ \"accountType\": \"SAVINGS\", \"balance\": 5000.0 }") 
+            .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isCreated())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(header().string("Location", "/api/account/12345"))
+            .andExpect(jsonPath("$.accountId").value("12345")) 
+            .andExpect(jsonPath("$.accountType").value("SAVINGS"))
+            .andExpect(jsonPath("$.balance").value(5000)); 
     }
 
 }
