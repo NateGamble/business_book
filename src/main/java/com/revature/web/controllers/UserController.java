@@ -145,7 +145,8 @@ public class UserController {
      */
     @PutMapping()
     public void updateUser(@RequestBody User user, HttpServletResponse resp) {
-        if (user.getUserId() == null) {
+        System.out.println("User id is: " + user.getUserId());
+        if (user.getUserId() == null || user.getUserId() == 0) {
             resp.setStatus(201);
             userService.register(user);
         } else {
