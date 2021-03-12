@@ -172,16 +172,53 @@ public class UserControllerIntegrationTest {
 
     @Test @Ignore
     public void test_createNewUser_givenValidUser() throws Exception {
+        User newUser = new User();
+        newUser.setUsername("newUser");
+        newUser.setPassword("pass");
+        newUser.setFirstName("first");
+        newUser.setLastName("last");
+        newUser.setEmail("email@mail.com");
+        newUser.setRole(Role.USER);
+        when(userRepoMock.save(newUser)).thenReturn(null);
+
+        String newUserJson = "{" +
+            "\"username\":\"" + newUser.getUsername() + "\", " + 
+            "\"password\":\"" + newUser.getPassword() + "\", " + 
+            "\"firstName\":\"" + newUser.getFirstName() + "\", " + 
+            "\"lastName\":\"" + newUser.getLastName() + "\", " + 
+            "\"email\":\"" + newUser.getEmail() + "\"" +
+            "\"role\":\"" + newUser.getRole() + "\"" +
+            "}";
+
+        // Currently returns a 200, not a 201
+        // should just hit /users, not /users/create
         mockMvc.perform(MockMvcRequestBuilders.post("/users/create")
             .contentType(MediaType.APPLICATION_JSON)
-            .content("{ \"accountType\": \"SAVINGS\", \"balance\": 5000.0 }") 
-            .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isCreated())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(header().string("Location", "/api/account/12345"))
-            .andExpect(jsonPath("$.accountId").value("12345")) 
-            .andExpect(jsonPath("$.accountType").value("SAVINGS"))
-            .andExpect(jsonPath("$.balance").value(5000)); 
+            .content(newUserJson))
+            .andExpect(status().isCreated());
+    }
+
+    @Test
+    public void test_createNewUser_givenInvalidUser() throws Exception {
+        User newUser = new User();
+        newUser.setPassword("pass");
+        newUser.setFirstName("first");
+        newUser.setLastName("last");
+        newUser.setEmail("email@mail.com");
+        when(userRepoMock.save(newUser)).thenReturn(null);
+
+        String newUserJson = "{" +
+            "\"password\":\"" + newUser.getPassword() + "\", " + 
+            "\"firstName\":\"" + newUser.getFirstName() + "\", " + 
+            "\"lastName\":\"" + newUser.getLastName() + "\", " + 
+            "\"email\":\"" + newUser.getEmail() + "\"" +
+            "}";
+
+        // should just hit /users, not /users/create
+        mockMvc.perform(MockMvcRequestBuilders.post("/users/create")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(newUserJson))
+            .andExpect(status().isBadRequest());
     }
 
 }
