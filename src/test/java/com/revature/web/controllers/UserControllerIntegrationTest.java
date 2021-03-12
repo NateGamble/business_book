@@ -1,17 +1,16 @@
 package com.revature.web.controllers;
 
 import org.junit.Ignore;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.internal.matchers.GreaterThan;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MockMvcBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
@@ -22,7 +21,6 @@ import static org.mockito.Mockito.when;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -82,6 +80,11 @@ public class UserControllerIntegrationTest {
         minUser.setEmail("e@m.com");
 
         list = List.of(fullUser, minUser);
+    }
+
+    @AfterAll
+    public static void printFinished() {
+        System.out.println("All tests finished");
     }
 
     @Test
@@ -170,7 +173,7 @@ public class UserControllerIntegrationTest {
                     .andExpect(status().isNotFound());
     }
 
-    @Test @Ignore
+    @Test
     public void test_createNewUser_givenValidUser() throws Exception {
         User newUser = new User();
         newUser.setUsername("newUser");
@@ -186,13 +189,13 @@ public class UserControllerIntegrationTest {
             "\"password\":\"" + newUser.getPassword() + "\", " + 
             "\"firstName\":\"" + newUser.getFirstName() + "\", " + 
             "\"lastName\":\"" + newUser.getLastName() + "\", " + 
-            "\"email\":\"" + newUser.getEmail() + "\"" +
-            "\"role\":\"" + newUser.getRole() + "\"" +
+            "\"email\":\"" + newUser.getEmail() + "\", " + 
+            "\"role\":\"" + newUser.getRole().toString().toUpperCase() + "\"" + 
             "}";
 
-        // Currently returns a 200, not a 201
-        // should just hit /users, not /users/create
-        mockMvc.perform(MockMvcRequestBuilders.post("/users/create")
+        System.out.println(newUserJson);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/users")
             .contentType(MediaType.APPLICATION_JSON)
             .content(newUserJson))
             .andExpect(status().isCreated());
@@ -215,10 +218,35 @@ public class UserControllerIntegrationTest {
             "}";
 
         // should just hit /users, not /users/create
-        mockMvc.perform(MockMvcRequestBuilders.post("/users/create")
+        mockMvc.perform(MockMvcRequestBuilders.post("/users")
             .contentType(MediaType.APPLICATION_JSON)
             .content(newUserJson))
             .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void testUpdate_onValidUser() throws Exception {
+        minUser.setRole(Role.ADMIN);
+        when(userRepoMock.save(minUser)).thenReturn(null);
+
+        String minUserJson = "{" +
+            "\"userId\":\"" + minUser.getUserId() + "\", " + 
+            "\"username\":\"" + minUser.getUsername() + "\", " + 
+            "\"password\":\"" + minUser.getPassword() + "\", " + 
+            "\"firstName\":\"" + minUser.getFirstName() + "\", " + 
+            "\"lastName\":\"" + minUser.getLastName() + "\", " + 
+            "\"email\":\"" + minUser.getEmail() + "\", " + 
+            "\"role\":\"" + minUser.getRole().toString().toUpperCase() + "\"" + 
+            "}";
+
+        System.out.println(minUserJson);
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/users")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(minUserJson))
+            .andExpect(status().isOk());
+
+
     }
 
 }
