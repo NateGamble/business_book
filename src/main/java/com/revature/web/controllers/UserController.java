@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -47,8 +50,13 @@ public class UserController {
     }
 
     @PutMapping()
-    public void updateUser(@RequestBody User user) {
-        userService.updateProfile(user);
+    public void updateUser(@RequestBody User user, HttpServletResponse resp) {
+        boolean updated = userService.updateProfile(user);
+        if (updated) {
+            resp.setStatus(204);
+        } else {
+            resp.setStatus(200);
+        }
     }
 
 

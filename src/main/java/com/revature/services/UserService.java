@@ -150,10 +150,18 @@ public class UserService {
 
     }
 
-    public void updateProfile(User updatedUser) {
+    public boolean updateProfile(User updatedUser) {
+        boolean updated;
 
         if (!isUserValid(updatedUser)) {
             throw new InvalidRequestException();
+        }
+
+        Optional<User> idUser = userRepo.findById(updatedUser.getUserId());
+        if (idUser.isEmpty()) {
+            updated = false;
+        } else {
+            updated = true;
         }
 
         Optional<User> persistedUser = userRepo.findUserByUsername(updatedUser.getUsername());
@@ -162,6 +170,8 @@ public class UserService {
         }
 
         userRepo.save(updatedUser);
+
+        return updated;
 
     }
 
