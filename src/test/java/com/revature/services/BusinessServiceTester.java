@@ -103,6 +103,14 @@ public class BusinessServiceTester {
     }
 
     @Test
+    @DisplayName("Verifying deleteBusinessById() works as expected and calls repo to delete business")
+    public void testDeleteBusinessById() {
+        assertThrows(InvalidRequestException.class, () -> bizServices.deleteBusinessById(0));
+        bizServices.deleteBusinessById(1);
+        verify(bizRepo, times(1)).deleteById(1);
+    }
+
+    @Test
     @DisplayName("Verifying errors thrown on getBusinessById() as expected")
     public void getBusinessByIdCheckInvalidId() {
         //check valid id not in db
@@ -151,6 +159,22 @@ public class BusinessServiceTester {
         assertThrows(InvalidRequestException.class, () -> bizServices.getBusinessByLocation(emptyLocation));
 
         assertThrows(ResourceNotFoundException.class, () -> bizServices.getBusinessByLocation(bizOne.getLocation()));
+    }
+
+    @Test
+    @DisplayName("Verifying getBusinessByType() works as expected and calls findbussinesses in repo")
+    public void testGetBusinessByType() {
+        bizServices.getBusinessesByType("validtype");
+        verify(bizRepo, times(1)).findBusinessesByBusinessType("validtype");
+    }
+
+    @Test
+    @DisplayName("Verifying error thrown on getBusinessByType() for null or empty string type")
+    public void getBusinessByTypeInvalid() {
+        String nullType = null;
+        assertThrows(InvalidRequestException.class, () -> bizServices.getBusinessesByType(nullType));
+        String emptyType = "";
+        assertThrows(InvalidRequestException.class, () -> bizServices.getBusinessesByType(emptyType));
     }
 
     @Test
