@@ -1,22 +1,27 @@
 package com.revature.services;
 
 import com.revature.exceptions.InvalidRequestException;
+import com.revature.exceptions.ResourceNotFoundException;
 import com.revature.models.Business;
 import com.revature.models.Hours;
 import com.revature.repos.HoursRepository;
 import org.jeasy.random.EasyRandom;
-import org.junit.Before;
-import org.junit.Test;
+import com.revature.repos.UserRepository;
+import org.jeasy.random.EasyRandom;
+import org.junit.jupiter.api.*;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.junit.MockitoJUnitRunner;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+
+import java.util.*;
+
+import java.sql.Timestamp;
 
 public class HoursServiceTester {
 
@@ -33,7 +38,7 @@ public class HoursServiceTester {
     @Mock
     HoursRepository hoursRepository;
 
-    @Before
+    @BeforeEach
     public void setup () {
         MockitoAnnotations.initMocks(this);
         EasyRandom generator = new EasyRandom();
@@ -60,19 +65,25 @@ public class HoursServiceTester {
     }
 
     @Test
+    @DisplayName("Verifying findHoursByHoursId() works as expected and pulls hours obj")
     public void testFindHoursByHoursId () {
         when(hoursRepository.findById(hours.getHoursId())).thenReturn(java.util.Optional.of(hours));
 
-        Hours testHours = hoursService.findHoursByHoursId(1);
+        assertEquals(hoursService.findHoursByHoursId(hours.getHoursId()), hours);
 
-        assertEquals(testHours.getHoursId(), hours.getHoursId());
-        verify(hoursService, times(1)).findHoursByHoursId(hours.getHoursId());
-        assertEquals(testHours, hours);
+        verify(hoursRepository, times(1)).findById(hours.getHoursId());
+    }
 
+    @Test
+    @DisplayName("Verifying error thrown on findHoursByHoursId() for invalid id or no hours found in repo call")
+    public void testFindHoursByHoursIdInvalid () {
+        //no findbyid proxy call created for hours repo so should throw error
+        assertThrows(ResourceNotFoundException.class, () -> hoursService.findHoursByHoursId(hours.getHoursId()));
         assertThrows(InvalidRequestException.class, () -> hoursService.findHoursByHoursId(0));
     }
 
     @Test
+    @DisplayName("Verifying findHoursByBusiness() works as expected and pulls hours obj")
     public void testFindHoursByBusiness () {
         List<Hours> checkList = new ArrayList<>();
 
@@ -81,11 +92,71 @@ public class HoursServiceTester {
         checkList.add(hours1);
 
         when(hoursRepository.findHoursByBusiness(bus1)).thenReturn(checkList);
+        assertEquals(hoursService.findHoursByBusiness(bus1), checkList);
 
-        List<Hours> testList = hoursService.findHoursByBusiness(bus1);
+        verify(hoursRepository, times(1)).findHoursByBusiness(bus1);
+    }
 
-        assertEquals(testList.size(), 2);
-        verify(hoursService, times(1)).findHoursByBusiness(bus1);
-        assertEquals(testList, checkList);
+    @Test
+    @DisplayName("Verifying createHours() works as expected and pulls hours obj")
+    public void testCreateHours() {
+        hours.setDay(1);
+        hoursService.createHours(hours);
+        verify(hoursRepository, times(1)).save(hours);
+    }
+
+    @Test
+    @DisplayName("Verifying error thrown on createHours() for invalid hours obj")
+    public void testCreateHoursInvalid() {
+        hours.setDay(0);
+        assertThrows(InvalidRequestException.class, () -> hoursService.createHours(hours));
+    }
+
+    @Test
+    @DisplayName("Verifying updateHours() works as expected and pulls hours obj")
+    public void testUpdateHours() {
+        hours.setDay(1);
+        hoursService.updateHours(hours);
+        verify(hoursRepository, times(1)).save(hours);
+    }
+
+    @Test
+    @DisplayName("Verifying error thrown on updateHours() for invalid hours obj")
+    public void testUpdateHoursInvalid() {
+        hours.setDay(0);
+        assertThrows(InvalidRequestException.class, () -> hoursService.updateHours(hours));
+    }
+
+    @Test
+    @DisplayName("Verifying deleteHours() works as expected and pulls hours obj")
+    public void testDeleteHours() {
+        hours.setDay(1);
+        hoursService.deleteHours(hours);
+        verify(hoursRepository, times(1)).delete(hours);
+    }
+
+    @Test
+    @DisplayName("Verifying error thrown on deleteHours() for invalid hours obj")
+    public void testDeleteHoursInvalid() {
+        hours.setDay(0);
+        assertThrows(InvalidRequestException.class, () -> hoursService.deleteHours(hours));
+    }
+
+    @Test
+    @DisplayName("Verifying error thrown on isHoursValid() returns true for valid entry")
+    public void testIsHoursValid() {
+        hours.setDay(1);
+        assertTrue(hoursService.isHoursValid(hours));
+    }
+
+    @Test
+    @DisplayName("Verifying error thrown on isHoursValid() for null business or day on hours obj")
+    public void testIsHoursValidInvalid() {
+        hours.setDay(0);
+        assertFalse(hoursService.isHoursValid(hours));
+        hours.setDay(1);
+        assertTrue(hoursService.isHoursValid(hours));
+        hours.setBusiness(null);
+        assertFalse(hoursService.isHoursValid(hours));
     }
 }
