@@ -48,7 +48,7 @@ public class SecurityAspect {
 
         Cookie[] cookies = request.getCookies();
 
-        if (cookies == null ) {
+        if (cookies == null) {
             throw new AuthenticationException("An unauthenticated request was made to a protected endpoint!");
         }
 
@@ -59,7 +59,7 @@ public class SecurityAspect {
                         .getValue();
 
         Principal principal = jwtParser.parseToken(token);
-
+        System.out.println(principal.getRole());
         //Principal principal = (Principal) request.getAttribute("principal");
 
         if (principal == null) {

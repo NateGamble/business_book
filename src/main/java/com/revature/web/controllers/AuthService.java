@@ -79,7 +79,6 @@ public class AuthService {
             BCrypt.Result result = BCrypt.verifyer().verify(password.toCharArray(), hashedUser.getPassword());
 
             Principal principal = new Principal(hashedUser);
-
             if (result.verified) {
                 String token = jwtGenerator.createJwt(principal);
                 principal.setToken(token);

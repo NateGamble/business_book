@@ -11,6 +11,10 @@ $(document).ready(function(){
     $("#userpage").click(function(){
     	$("#info-container").load("resources/users.html");
     });
+
+    $("#businessbyidpage").click(function(){
+    	$("#info-container").load("resources/businessbyid.html");
+    });
 	
 });
   

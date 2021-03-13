@@ -5,11 +5,17 @@
 <p>
 <br><br>
  <label for="username">Username:</label><br>
- <input type="text" id="username" name="username" value="0x"><br>
+ <input type="text" id="username" name="username" value="agooge"><br>
 
  <label for="password">Password:</label><br>
- <input type="text" id="password" name="password" value="p455"><br>
+ <input type="text" id="password" name="password" value="password"><br>
  <button onclick="SendData()">Send JSON</button> 
+
+
+
+ <br>agooge     password    (ADMIN)
+ <br>brandon   1                    (OWNER)
+ <br>basic         user              (USER)
 
 </p>
 
@@ -18,36 +24,36 @@
 <script>
 
     function SendData() {
-
+        let xhr = new XMLHttpRequest();
+        let url = "http://localhost:5000/auth/login"; 
 		let result = document.querySelector('#data'); 
-            let username = document.querySelector('#username'); 
-            let password = document.querySelector('#password'); 
-               
-            
-            let xhr = new XMLHttpRequest(); // Creating a XHR object 
-            let url = "http://localhost:5000/auth/login"; 
+        let username = document.querySelector('#username'); 
+        let password = document.querySelector('#password'); 
         
-            
-            xhr.open("POST", url, true); // open a connection 
-  
-            // Set the request header i.e. which type of content you are sending 
-            xhr.setRequestHeader("Content-Type", "application/json"); 
-  			console.log("3");
-            
-            xhr.onreadystatechange = function () { // Create a state change callback 
-                if (xhr.readyState === 4 && xhr.status === 200) { 
-  
-                    // Print received data from server 
-                    result.innerHTML = this.responseText; 
-  
-                } 
-            }; 
-			console.log("4");
-            // Converting JSON data to string 
-            var data = JSON.stringify({ "username": username.value, "password": password.value }); 
-  
-            // Sending data with the request 
-            xhr.send(data); 
-			console.log("5");
+        // console.log("CLICK")
+        // $.ajax(url, {
+        //     method: 'POST',
+        //     data: {"username": username, "password": password},
+        //     crossDomain: true,
+        //     success: "login_success",
+        //     error: "login_error"
+        // });
+        // console.log("CLICK...")
+        
+        xhr.open("POST", url, true); // open a connection 
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.withCredentials=true;
+        
+        xhr.onreadystatechange = function () { // Create a state change callback 
+            if (xhr.readyState === 4 && xhr.status === 200) { 
+                //xhr.getResponseHeader('bb-token');
+                //Document.cooki
+                result.innerHTML = this.responseText; // Print received data from server 
+            } 
+        }; 
+    
+        var data = JSON.stringify({ "username": username.value, "password": password.value }); // Converting JSON data to string 
+        xhr.send(data); // Sending data with the request 
+        
     }
 </script>		

@@ -1,0 +1,70 @@
+<center><h2>Get Business by ID</h2></center>
+<p>
+
+
+    <p>
+        <br><br>
+         <label for="business-id">ID: </label>
+         <input type="text" id="business-id" name="business-id" value="1"><br>
+         <button id='getData' onclick="GetData()">Get Data</button>
+        
+    </p>
+
+    
+</p>
+<div id="data"></div>
+
+<script>
+    let uri = 'http://localhost:5000/businesses/id/'+document.getElementById("business-id").value;
+    const initDetails = {
+        method: 'get',
+        credentials: 'include',
+        headers: {
+            "Content-Type": "application/json; charset=utf-8"
+        },
+        //withCredentials: true,
+        mode: "cors"
+    }
+
+    function GetData() {
+
+        fetch( uri, initDetails )
+            .then( response =>{
+                if ( response.status !== 200 ) {
+                    console.log( 'Status Code: ' + response.status );
+                    return;
+                }
+                console.log( response.headers.get( "Content-Type" ) );
+                return response.json();
+            })
+            .then( function (data) {
+                
+                console.log( JSON.stringify( data ) );
+
+                appendData(data);
+            })
+            .catch( err =>{
+                console.log( 'Fetch Error :-S', err );
+            });
+            
+            function appendData(data) {
+                // var mainContainer = document.getElementById("data");
+                // var div = document.createElement("div");
+                // div.innerHTML = 
+                //     'Name: ' + data.owner.firstName + ' ' + data.owner.lastName + "<br>" +
+                //     'Username: ' + data.username + "<br>" +
+                //     'Password: ' + data.password + "<br>" +
+                //     'Role: ' + data.role + "<br>" +
+                    
+                //     'Email: ' + data.email + "<br>" +
+                //     'Phone: ' + data.phoneNumber + "<br>" +
+                //     'Registration Date: ' + data.registerDatetime + "<br>" +
+                //     'Is Active: ' + data.active + "<br>" +
+                //     'Favorites: ' + data.favorites;
+                    
+                // mainContainer.appendChild(div);
+                
+            }
+    }
+</script>		
+

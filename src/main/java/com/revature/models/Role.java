@@ -2,9 +2,9 @@ package com.revature.models;
 
 public enum Role {
 
-    ADMIN("Admin"),
-    OWNER("Owner"),
-    USER("User");
+    ADMIN("ADMIN"),
+    OWNER("OWNER"),
+    USER("USER");
 
     private String roleName;
 
