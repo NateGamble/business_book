@@ -14,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.MediaType;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -72,6 +74,7 @@ public class BusinessController {
 
     /**
      * Handles an HTTPRequest for getting a Business by Id
+     * @param id the id of the desired Business
      * @return the Business object that corresponds to the given Id
      */
     @ResponseStatus(HttpStatus.OK)
@@ -81,6 +84,7 @@ public class BusinessController {
 
     /**
      * Handles an HTTPRequest for deleting a Review by Id
+     * @param id the id of the desired Review to delete
      */
     @ResponseStatus(HttpStatus.OK)
     @DeleteMapping(path = "/reviews/{id}")
@@ -91,8 +95,8 @@ public class BusinessController {
     }
 
     /**
-     *
-     * @param id
+     * Handles an HTTPRequest for deleting a Business by Id
+     * @param id the id of the Business to delete
      */
     @ResponseStatus(HttpStatus.OK)
     @DeleteMapping(path = "/id/{id}")
@@ -102,14 +106,31 @@ public class BusinessController {
     }
 
     /**
-     *
-     * @param biz
+     * Handles an HTTPRequest for creating a Business
+     * @param biz the Business object to create
      */
     @ResponseStatus(HttpStatus.CREATED)
-    @PutMapping()
+    @PostMapping()
     @Secured(allowedRoles = {"ADMIN", "OWNER"})
     public void addNewBusiness(@RequestBody Business biz) {
         bizService.addBusiness(biz);
+    }
+
+    /**
+     * Handles an HTTPRequest for updating (PUT) a Business
+     * @param biz the Business object
+     * @param resp the HTTPServletResponse
+     */
+    @PutMapping()
+    @Secured(allowedRoles = {"ADMIN", "OWNER"})
+    public void updateBusiness(@RequestBody Business biz, HttpServletResponse resp) {
+        if (biz.getId() == null || biz.getId() == 0) {
+            resp.setStatus(202);
+            bizService.addBusiness(biz);
+        } else {
+            resp.setStatus(204);
+            bizService.updateBusiness(biz);
+        }
     }
 
     // END ADMIN PRIVILEGES SECTION ///////////////////////////////////////////////////
@@ -120,21 +141,39 @@ public class BusinessController {
     // Should be split into a POST and PUT???
 
     /**
-     * Handles an HTTPRequest for creating or updating a Post
+     * Handles an HTTPRequest for creating a Post
      * @param id the Business Id for the Post
      * @param post the Post object to add
      */
     @ResponseStatus(HttpStatus.CREATED)
-    @PutMapping(path = "/id/{id}/posts")
+    @PostMapping(path = "/id/{id}/posts")
     @Secured(allowedRoles = {"OWNER"})
     public void addNewBusinessPost(@PathVariable int id, @RequestBody Post post) {
         Business biz = bizService.getBusinessById(id);
         post.setBusiness(biz);
 
-        // Should be adding a Post not a Business!!
-        // bizService.addBusiness(biz);
-
         postService.createPost(post);
+    }
+
+    /**
+     * Handles an HTTPRequest to update (PUT) a Post
+     * @param id the Id of the Business that the post is associated with
+     * @param post the Post object
+     * @param resp the HTTPServlet response
+     */
+    @PutMapping(path = "/id/{id}/posts")
+    @Secured(allowedRoles = {"OWNER"})
+    public void updateBusinessPost(@PathVariable int id, @RequestBody Post post, HttpServletResponse resp) {
+        Business biz = bizService.getBusinessById(id);
+        post.setBusiness(biz);
+
+        if (post.getPostId() == null || post.getPostId() ==  0) {
+            resp.setStatus(202);
+            postService.createPost(post);
+        } else {
+            resp.setStatus(204);
+            postService.editPost(post);
+        }
     }
 
     // END OWNER PRIVILEGES SECTION
@@ -218,19 +257,38 @@ public class BusinessController {
         return postService.findPostsByBusiness(biz);
     }
 
-
-    //SHOULD BE SPLIT INTO POST AND PUT?
     /**
-     * Handles an HTTPRequest for creating or updating a Review
+     * Handles an HTTPRequest for creating a Review
      * @param review the review given by the User
      * @param id the Business Id to review
      */
     @ResponseStatus(HttpStatus.CREATED)
-    @PutMapping(path = "/id/{id}/reviews")
-    @Secured(allowedRoles = {"User"})
+    @PostMapping(path = "/id/{id}/reviews")
+    @Secured(allowedRoles = {"USER"})
     public void addNewBusinessReview (@RequestBody Review review, @PathVariable int id) {
         Business biz = bizService.getBusinessById(id);
         review.setBusiness(biz);
         reviewsService.createReview(review);
+    }
+
+    /**
+     * Handles an HTTPRequest for updating (PUT) a Review
+     * @param review the review to be updated
+     * @param id the Business Id for the Review
+     * @param resp the HTTPServletResponse object
+     */
+    @PutMapping(path = "/id/{id}/reviews")
+    @Secured(allowedRoles = {"USER"})
+    public void updateBusinessReview (@RequestBody Review review, @PathVariable int id, HttpServletResponse resp) {
+        Business biz = bizService.getBusinessById(id);
+        review.setBusiness(biz);
+
+        if (review.getId() == null || review.getId() == 0) {
+            resp.setStatus(202);
+            reviewsService.createReview(review);
+        } else {
+            resp.setStatus(204);
+            reviewsService.editReview(review);
+        }
     }
 }

@@ -116,6 +116,14 @@ public class BusinessService {
         businessRepo.deleteById(id);
     }
 
+    public void updateBusiness(Business business) {
+        if (!isBusinessValid(business)) {
+            throw new InvalidRequestException("Business object is invalid.");
+        }
+
+        businessRepo.save(business);
+    }
+
     public Boolean isBusinessValid(Business business) {
         //System.out.println(business);
         if (business == null) return false;
