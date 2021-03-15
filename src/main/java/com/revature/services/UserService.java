@@ -27,7 +27,6 @@ public class UserService {
         this.userRepo = repo;
     }
 
-    //DONE TESTING
     public User getUserById(int id) {
         if (id <= 0 ) {
             throw new InvalidRequestException();
@@ -35,7 +34,6 @@ public class UserService {
         return userRepo.findById(id).orElseThrow(ResourceNotFoundException::new);
     }
 
-    //DONE TESTING
     public void register(User newUser) {
 
         if (!isUserValid(newUser)) throw new InvalidRequestException();
@@ -50,7 +48,6 @@ public class UserService {
         userRepo.save(newUser);
     }
 
-    //DONE TESTING
     public List<User> getAllUsers() {
 
         List<User> users = (List<User>) userRepo.findAll();

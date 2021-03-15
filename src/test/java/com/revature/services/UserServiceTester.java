@@ -80,9 +80,9 @@ public class UserServiceTester {
     @Test
     @DisplayName("Verifying getUserById() works as expected and pulls user")
     public void getUserById() {
+        userTwo.setUserId(3);
         //create a 'proxy call' for the User repository 'findById()' method to hone in on the service class
         when(userRepo.findById(userTwo.getUserId())).thenReturn(java.util.Optional.of(userTwo));
-
         assertEquals(userService.getUserById(userTwo.getUserId()), userTwo);
         verify(userRepo, times(1)).findById(userTwo.getUserId());
     }
