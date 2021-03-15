@@ -182,13 +182,6 @@ public class UserService {
         userRepo.delete(user);
     }
 
-    public User getUserByEmail (String email) {
-        if (email == null || email.trim().equals("")) {
-            throw new InvalidRequestException();
-        }
-        return userRepo.findUserByEmail(email).orElseThrow(ResourceNotFoundException::new);
-    }
-
     public Boolean isUserValid(User user) {
         System.out.println(user);
         if (user == null) return false;

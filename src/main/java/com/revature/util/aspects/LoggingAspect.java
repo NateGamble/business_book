@@ -19,7 +19,7 @@ public class LoggingAspect {
 
     private final Logger logger = LogManager.getLogger(LoggingAspect.class);
 
-    @Pointcut("within(com.revature..*)")
+    @Pointcut("within(com.revature..*) && !within(com.revature.filters..*)")
     public void logAllPointcut() {}
 
     // All methods will take in a join point
