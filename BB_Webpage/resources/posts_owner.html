@@ -1,0 +1,52 @@
+<center><h2>Create Post</h2></center>
+
+		
+
+<p>
+<br><br>
+ <label for="post-type">Post Type:</label><br>
+ <select name="post-type" id="post-type">
+    <option value="General">General</option>
+    <option value="Sale">Sale</option>
+    <option value="Event">Event</option>
+    <option value="Hours">Hours</option>
+    <option value="Warning">Warning</option>
+  </select>
+
+ <label for="post">Post:</label><br>
+ <textarea id="post" name="post" rows="10" cols="50">Your new Post</textarea><br>
+ 
+    <button onclick="SendData()">Post</button> 
+
+
+</p>
+
+<div id="data"></div>
+
+<script>
+
+    function SendData() {
+        let xhr = new XMLHttpRequest();
+        let url = "http://localhost:5000/businesses/id/1/posts"; 
+		//let result = document.querySelector('#data'); 
+        let postType = document.querySelector('#post-type'); 
+        let post = document.querySelector('#post'); 
+        
+        console.log(post.value);
+        console.log(postType.value);
+
+        xhr.open("PUT", url, true); 
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.withCredentials=true;
+        
+        xhr.onreadystatechange = function () { 
+            if (xhr.readyState === 4 && xhr.status === 200) { 
+                result.innerHTML = this.responseText; 
+            } 
+        }; 
+    
+        var data = JSON.stringify({ "postType": postType.value, "post": post.value }); 
+        xhr.send(data); 
+        
+    }
+</script>	
