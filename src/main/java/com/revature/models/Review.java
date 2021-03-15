@@ -21,7 +21,7 @@ public class Review {
 
     @Id @Column(name = "review_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     @JoinColumn(name = "business_id")
     @ManyToOne(targetEntity = Business.class, optional = false)

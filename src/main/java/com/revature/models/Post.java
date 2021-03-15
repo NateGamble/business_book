@@ -20,7 +20,7 @@ public class Post {
     @Id
     @Column(name="post_id")
     @GeneratedValue(strategy=GenerationType.IDENTITY)
-    private int postId;
+    private Integer postId;
 
     @ManyToOne(targetEntity = Business.class, optional = false)
     @JoinColumn(name = "business_id", columnDefinition = "int4 NOT NULL")
