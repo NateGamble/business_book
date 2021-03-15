@@ -1,22 +1,20 @@
 package com.revature.web.controllers;
 
-import com.revature.models.Business;
-import com.revature.models.Hours;
-import com.revature.models.Post;
-import com.revature.models.Review;
-import com.revature.services.BusinessService;
-import com.revature.services.HoursService;
-import com.revature.services.PostService;
-import com.revature.services.ReviewsService;
+import com.revature.dtos.Principal;
+import com.revature.models.*;
+import com.revature.services.*;
+import com.revature.util.JwtParser;
 import com.revature.util.Secured;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.MediaType;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -46,6 +44,10 @@ public class BusinessController {
      */
     private final HoursService hoursService;
 
+    private final UserService userService;
+
+    private final JwtParser jwtParser;
+
     /**
      * All-args constructor
      * @param bizService service class for Business
@@ -55,11 +57,14 @@ public class BusinessController {
      */
     @Autowired
     public BusinessController (BusinessService bizService, ReviewsService reviewsService,
-                               PostService postService, HoursService hoursService) {
+                               PostService postService, HoursService hoursService, UserService userService,
+                               JwtParser jwtParser) {
         this.bizService = bizService;
         this.reviewsService = reviewsService;
         this.postService = postService;
         this.hoursService = hoursService;
+        this.userService = userService;
+        this.jwtParser = jwtParser;
     }
 
     // ADMIN PRIVILEGES SECTION
@@ -112,7 +117,31 @@ public class BusinessController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping()
     @Secured(allowedRoles = {"ADMIN", "OWNER"})
-    public void addNewBusiness(@RequestBody Business biz) {
+    public void addNewBusiness(@RequestBody Business biz, HttpServletRequest req) {
+        Timestamp now = Timestamp.valueOf(LocalDateTime.now());
+        biz.setRegisterDatetime(now);
+
+        // Get the cookies (JWT) from the request
+        Cookie[] cookies = req.getCookies();
+        String token = "";
+
+        // Loop through cookies to find the correct one in case there are multiple cookies
+        for (Cookie cookie : cookies) {
+
+            // Finding the JWT cookie
+            if (cookie.getName().equals("bb-token")) {
+                token = cookie.getValue();
+            }
+        }
+
+        // Create a Principal from the JWT
+        Principal principal = jwtParser.parseToken(token);
+
+        // Return the User found by the username from the Principal
+        User user = userService.getUserByUsername(principal.getUsername());
+
+        biz.setOwner(user);
+
         bizService.addBusiness(biz);
     }
 
