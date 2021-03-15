@@ -48,8 +48,11 @@
             if (xhr.readyState === 4 && xhr.status === 200) { 
                 //xhr.getResponseHeader('bb-token');
                 //Document.cooki
-                result.innerHTML = this.responseText; // Print received data from server 
-            } 
+                result.innerHTML = this.responseText; // Print received data from server
+                alert("Login successful!");
+            } else if (xhr.readyState === 4 && xhr.status >= 400) {
+              alert("Login unsuccessful!");
+            }
         }; 
     
         var data = JSON.stringify({ "username": username.value, "password": password.value }); // Converting JSON data to string 

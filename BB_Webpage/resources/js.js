@@ -1,6 +1,7 @@
 $(document).ready(function(){
 	
 	$("#loginform").click(function(){
+	console.log("in login");
 		$("#info-container").load("resources/loginform.html");
 	});
 	
@@ -10,6 +11,10 @@ $(document).ready(function(){
 
     $("#userpage").click(function(){
     	$("#info-container").load("resources/users.html");
+    });
+
+    $("#adminpage").click(function() {
+        $("#info-container").load("resources/adminpage.html");
     });
 
     $("#businessbyidpage").click(function(){
