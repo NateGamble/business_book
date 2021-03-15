@@ -120,28 +120,7 @@ public class BusinessController {
     public void addNewBusiness(@RequestBody Business biz, HttpServletRequest req) {
         Timestamp now = Timestamp.valueOf(LocalDateTime.now());
         biz.setRegisterDatetime(now);
-
-        // Get the cookies (JWT) from the request
-        Cookie[] cookies = req.getCookies();
-        String token = "";
-
-        // Loop through cookies to find the correct one in case there are multiple cookies
-        for (Cookie cookie : cookies) {
-
-            // Finding the JWT cookie
-            if (cookie.getName().equals("bb-token")) {
-                token = cookie.getValue();
-            }
-        }
-
-        // Create a Principal from the JWT
-        Principal principal = jwtParser.parseToken(token);
-
-        // Return the User found by the username from the Principal
-        User user = userService.getUserByUsername(principal.getUsername());
-
-        biz.setOwner(user);
-
+        biz.setOwner(getUserFromJwt(req));
         bizService.addBusiness(biz);
     }
 
@@ -180,10 +159,12 @@ public class BusinessController {
     public void addNewBusinessPost(@PathVariable int id, @RequestBody Post post) {
         Business biz = bizService.getBusinessById(id);
         post.setBusiness(biz);
+        post.setCreatedTime(Timestamp.valueOf(LocalDateTime.now()));
 
         postService.createPost(post);
     }
 
+    // UPDATE PUT with TIMESTAMP!
     /**
      * Handles an HTTPRequest to update (PUT) a Post
      * @param id the Id of the Business that the post is associated with
@@ -294,12 +275,14 @@ public class BusinessController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(path = "/id/{id}/reviews")
     @Secured(allowedRoles = {"USER"})
-    public void addNewBusinessReview (@RequestBody Review review, @PathVariable int id) {
+    public void addNewBusinessReview (@RequestBody Review review, @PathVariable int id, HttpServletRequest req) {
         Business biz = bizService.getBusinessById(id);
         review.setBusiness(biz);
+        review.setUser(getUserFromJwt(req));
         reviewsService.createReview(review);
     }
 
+    // UPDATE PUT WITH TIMESTAMP!
     /**
      * Handles an HTTPRequest for updating (PUT) a Review
      * @param review the review to be updated
@@ -320,4 +303,27 @@ public class BusinessController {
             reviewsService.editReview(review);
         }
     }
+
+    public User getUserFromJwt (HttpServletRequest req) {
+        // Get the cookies (JWT) from the request
+        Cookie[] cookies = req.getCookies();
+        String token = "";
+
+        // Loop through cookies to find the correct one in case there are multiple cookies
+        for (Cookie cookie : cookies) {
+
+            // Finding the JWT cookie
+            if (cookie.getName().equals("bb-token")) {
+                token = cookie.getValue();
+            }
+        }
+
+        // Create a Principal from the JWT
+        Principal principal = jwtParser.parseToken(token);
+
+        // Return the User found by the username from the Principal
+        return userService.getUserByUsername(principal.getUsername());
+    }
 }
+
+
