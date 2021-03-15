@@ -1,4 +1,5 @@
-fetch("http://localhost:5000/users")
+function getAllUsers() {
+   fetch("http://localhost:5000/users")
   .then(resp => {
         if (resp.status >= 400) {
             alert("Something went wrong while attempting to grab the users!");
@@ -10,7 +11,11 @@ fetch("http://localhost:5000/users")
   .then(users => {
        printAppUsers(users.filter(user => user.active));
   });
+}
 
+getAllUsers();
+
+function getAllBusinesses() {
 fetch("http://localhost:5000/businesses")
     .then(resp => {
           if (resp.status >= 400) {
@@ -23,6 +28,9 @@ fetch("http://localhost:5000/businesses")
     .then(businesses => {
         printBusinesses(businesses);
     });
+}
+
+getAllBusinesses();
 
 function usersClosure(usersParam) {
     let users = usersParam;
@@ -186,7 +194,7 @@ function showReviewsByBusiness(biz) {
 
     if (!biz.reviews || biz.reviews.length === 0) {
         let errorHeader = document.createElement("h1");
-        errorHeader.setAttribute("style", "color: red;");
+        errorHeader.setAttribute("id", "errorHeader");
         errorHeader.textContent = "No reviews found for " + biz.businessName;
         reviews.appendChild(errorHeader);
 
@@ -247,7 +255,7 @@ function deleteBusiness(bizId) {
     })
     .then(res => {
         if (res.status < 400) {
-            printBusinesses();
+            getAllBusinesses();
         }
     });*/
 }
@@ -255,12 +263,13 @@ function deleteBusiness(bizId) {
 function deleteUser(userId) {
     let deleteUrl = "http://localhost:5000/users/id/" + userId;
     console.log(deleteUrl);
+    getAllUsers();
     /*fetch(deleteUrl, {
         method: 'DELETE'
     })
     .then(res => {
         if (res.status < 400) {
-            printUsers();
+            getAllUsers();
         }
     });*/
 }
@@ -268,12 +277,13 @@ function deleteUser(userId) {
 function deleteReview(reviewId) {
     let deleteUrl = "http://localhost:5000/businesses/reviews/id/" + reviewId;
     console.log(deleteUrl);
+
     /*fetch(deleteUrl, {
         method: 'DELETE'
     })
     .then(res => {
         if (res.status < 400) {
-            printBusinesses();
+            getAllBusinesses();
         }
     });*/
 }

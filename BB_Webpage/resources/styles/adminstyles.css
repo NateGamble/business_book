@@ -1,5 +1,5 @@
 td, th {
-    padding: 2%;
+    padding: 1.6%;
     border: 2px solid rgb(200, 200, 200);
 }
 
@@ -19,9 +19,15 @@ tr:nth-child(odd) {
     background-color: #334c34;
 }
 
+#errorHeader {
+    margin-left: 3%;
+    color: red;
+}
+
 table {
     color: white;
-    width: 75%;
+    font-size: 1.2rem;
+    width: 95%;
     border-collapse: collapse;
     border: 2px solid rgb(200, 200, 200);
     margin: 2% 3%;
