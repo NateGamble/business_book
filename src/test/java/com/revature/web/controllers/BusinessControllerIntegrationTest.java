@@ -1,6 +1,23 @@
 package com.revature.web.controllers;
 
-import org.junit.Ignore;
+import static org.mockito.Mockito.when;
+
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+
+import com.revature.models.Business;
+import com.revature.models.Hours;
+import com.revature.models.Post;
+import com.revature.models.Review;
+import com.revature.models.Role;
+import com.revature.models.User;
+import com.revature.repos.BusinessRepository;
+import com.revature.repos.HoursRepository;
+import com.revature.repos.PostRepository;
+import com.revature.repos.ReviewsRepository;
+
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,37 +34,30 @@ import org.springframework.web.context.WebApplicationContext;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.mockito.Mockito.when;
-
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-
-import com.revature.models.Business;
-import com.revature.models.Role;
-import com.revature.models.User;
-import com.revature.repos.UserRepository;
-import com.revature.util.aspects.SecurityAspect;
-
 
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
-public class UserControllerIntegrationTest {
+public class BusinessControllerIntegrationTest {
+
 
     private MockMvc mockMvc;
     private WebApplicationContext webContext;
     @MockBean
-    private UserRepository userRepoMock;
-    // Need to add some way to ignore the @secured annotation on some endpoints
+    private BusinessRepository businessRepoMock;
     @MockBean
-    private SecurityAspect security;
+    private PostRepository postRepoMock;
+    @MockBean
+    private HoursRepository hoursRepoMock;
+    @MockBean
+    private ReviewsRepository reviewRepoMock;
+    
 
-    User fullUser, minUser;
-    List<User> list;
+    Business fullBusiness, minBusiness;
+    User fullUser;
+    List<Business> list;
 
     @Autowired
-    public UserControllerIntegrationTest(WebApplicationContext webContext) {
+    public BusinessControllerIntegrationTest(WebApplicationContext webContext) {
         this.webContext = webContext;
     }
 
@@ -55,7 +65,9 @@ public class UserControllerIntegrationTest {
     public void setup() {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(webContext).build();
 
-        // set up users and lists for user repo to return so we don't interact w/ database
+        Timestamp now = Timestamp.valueOf(LocalDateTime.now());
+
+        // set up data for repos to return so we don't interact w/ database
         fullUser = new User();
         fullUser.setUserId(1);
         fullUser.setUsername("ngamble");
@@ -64,26 +76,60 @@ public class UserControllerIntegrationTest {
         fullUser.setPhoneNumber("555-555-5555");
         fullUser.setFirstName("Nate");
         fullUser.setLastName("Gamble");
-        fullUser.setRegisterDatetime(Timestamp.valueOf(LocalDateTime.now()));
+        fullUser.setRegisterDatetime(now);
         fullUser.setActive(true);
         fullUser.setRole(Role.ADMIN);
 
-        Business bus = new Business();
-        bus.setBusinessName("Fake name");
-        bus.setEmail("fake email");
-        bus.setBusinessType("petshop");
+        // Start business setup
+		fullBusiness = new Business();
+        fullBusiness.setId(1);
+        fullBusiness.setBusinessName("Aldi");
+        fullBusiness.setBusinessType("Store");
+        fullBusiness.setEmail("email@business.com");
+        fullBusiness.setLocation("here");
+        fullBusiness.setActive(true);
+        fullBusiness.setOwner(fullUser);
+        fullBusiness.setRegisterDatetime(now);
+
+        // review for business
+        Review review = new Review();
+        review.setId(1);
+        review.setBusiness(fullBusiness);
+        review.setRating(5.0);
+        review.setReview("best business evah!");
+        review.setUser(fullUser);
+
+        // hours for business
+        Hours hours = new Hours();
+        hours.setHoursId(1);
+        hours.setBusiness(fullBusiness);
+        hours.setDay(0);
+        // yyyy-[m]m-[d]d hh:mm:ss
+        hours.setOpen(Timestamp.valueOf("2020-3-14 08:00:00"));
+        hours.setClosed(Timestamp.valueOf("2020-3-14 21:00:00"));
+
+        // post for business
+        Post post = new Post();
+        post.setPostId(1);
+        post.setBusiness(fullBusiness);
+        post.setCreatedTime(now);
+        post.setPostType("Sale");
+        post.setBody("We're having a sale on all watermelon because they're gross");
+
+        // Add review, hours and post to full business
+        fullBusiness.setReviews(List.of(review));
+        fullBusiness.setHours(List.of(hours));
+        fullBusiness.setPosts(List.of(post));
+
+        Business minBusiness = new Business();
+        minBusiness.setId(2);
+        minBusiness.setBusinessName("Fake name");
+        minBusiness.setEmail("fake email");
+        minBusiness.setBusinessType("petshop");
         
-        fullUser.setFavorites(List.of(bus));
+        fullUser.setFavorites(List.of(minBusiness));
 
-        minUser = new User();
-        minUser.setUserId(2);
-        minUser.setUsername("min");
-        minUser.setPassword("p");
-        minUser.setFirstName("f");
-        minUser.setLastName("l");
-        minUser.setEmail("e@m.com");
-
-        list = List.of(fullUser, minUser);
+        list = List.of(fullBusiness, minBusiness);
     }
 
     @AfterAll
@@ -92,19 +138,17 @@ public class UserControllerIntegrationTest {
     }
 
     @Test
-    public void test_getUserById_givenValidId() throws Exception {
-        when(userRepoMock.findById(minUser.getUserId())).thenReturn(Optional.of(minUser));
+    public void test_getBusinessById_givenValidId() throws Exception {
+        when(businessRepoMock.findById(minBusiness.getId())).thenReturn(Optional.of(minBusiness));
 
-        this.mockMvc.perform(MockMvcRequestBuilders.get("/users/id/{id}", minUser.getUserId()))
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/businesses/id/{id}", minBusiness.getId()))
                     .andDo(print())
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-                    .andExpect(jsonPath("$.userId").value(minUser.getUserId()))
-                    .andExpect(jsonPath("$.username").value(minUser.getUsername()))
-                    .andExpect(jsonPath("$.password").value(minUser.getPassword()))
-                    .andExpect(jsonPath("$.firstName").value(minUser.getFirstName()))
-                    .andExpect(jsonPath("$.lastName").value(minUser.getLastName()))
-                    .andExpect(jsonPath("$.email").value(minUser.getEmail()));
+                    .andExpect(jsonPath("$.id").value(minBusiness.getId()))
+                    .andExpect(jsonPath("$.businessName").value(minBusiness.getBusinessName()))
+                    .andExpect(jsonPath("$.email").value(minBusiness.getEmail()))
+                    .andExpect(jsonPath("$.businessType").value(minBusiness.getBusinessType()));
     }
 
     @Test
@@ -308,5 +352,5 @@ public class UserControllerIntegrationTest {
         mockMvc.perform(MockMvcRequestBuilders.delete("/users/id/{id}", -1))
             .andExpect(status().isBadRequest());
     }
-
+    
 }
