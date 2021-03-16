@@ -1,0 +1,33 @@
+td, th {
+    padding: 1%;
+    border: 2px solid rgb(200, 200, 200);
+}
+
+th[scope="col"] {
+    background-color: green;
+}
+
+th[scope="row"] {
+    background-color: #4CAF50;
+}
+
+tr:nth-child(even) {
+    background-color: #286f61;
+}
+
+tr:nth-child(odd) {
+    background-color: #334c34;
+}
+
+#errorHeader {
+    margin-left: 3%;
+    color: red;
+}
+
+table {
+    color: white;
+    width: 100%;
+    border-collapse: collapse;
+    border: 2px solid rgb(200, 200, 200);
+    margin: 2% 3%;
+}

@@ -16,7 +16,7 @@ function getAllUsers() {
 getAllUsers();
 
 function getAllBusinesses() {
-fetch("http://localhost:5000/businesses")
+    fetch("http://localhost:5000/businesses")
     .then(resp => {
           if (resp.status >= 400) {
               alert("Something went wrong while attempting to grab the businesses!");
