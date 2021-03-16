@@ -40,24 +40,24 @@ public class BusinessController {
     public List<Business> getAllBusinesses() { return bizService.getAllBusinesses(); }
 
     @GetMapping(path = "/id/{id}")
-    @Secured(allowedRoles = {"Admin"})
+    //@Secured(allowedRoles = {"Admin"})
     public Business getBusinessById(@PathVariable int id) { return bizService.getBusinessById(id); }
 
     @DeleteMapping(path = "/reviews/{id}")
-    @Secured(allowedRoles = {"Admin"})
+    //@Secured(allowedRoles = {"Admin"})
     public void deleteBusinessReviewById(@PathVariable int id) {
         Review review = reviewsService.findReviewByReviewId(id).get();
         reviewsService.deleteReview(review);
     }
 
     @DeleteMapping(path = "/id/{id}")
-    @Secured(allowedRoles = {"Admin", "Owner"})
+    //@Secured(allowedRoles = {"Admin", "Owner"})
     public void deleteBusinessById(@PathVariable int id) {
         bizService.deleteBusinessById(id);
     }
 
     @PutMapping()
-    @Secured(allowedRoles = {"Admin", "Owner"})
+    //@Secured(allowedRoles = {"Admin", "Owner"})
     public void addNewBusiness(@RequestBody Business biz) {
         bizService.addBusiness(biz);
     }
@@ -67,7 +67,7 @@ public class BusinessController {
     // OWNER PRIVILEGES SECTION
 
     @PutMapping(path = "/id/{id}/posts")
-    @Secured(allowedRoles = {"Owner"})
+    //@Secured(allowedRoles = {"Owner"})
     public void addNewBusinessPost(@PathVariable int id, @RequestBody Post post) {
         Business biz = bizService.getBusinessById(id);
         post.setBusiness(biz);
@@ -112,7 +112,7 @@ public class BusinessController {
     }
 
     @PutMapping(path = "/id/{id}/reviews")
-    @Secured(allowedRoles = {"User"})
+    //@Secured(allowedRoles = {"User"})
     public void addNewBusinessReview (@RequestBody Review review, @PathVariable int id) {
         Business biz = bizService.getBusinessById(id);
         review.setBusiness(biz);

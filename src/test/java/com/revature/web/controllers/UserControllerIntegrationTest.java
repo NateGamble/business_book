@@ -40,8 +40,8 @@ public class UserControllerIntegrationTest {
     @MockBean
     private UserRepository userRepoMock;
     // Need to add some way to ignore the @secured annotation on some endpoints
-    @MockBean
-    private SecurityAspect security;
+    // @MockBean
+    // private SecurityAspect security;
 
     User fullUser, minUser;
     List<User> list;
@@ -172,6 +172,8 @@ public class UserControllerIntegrationTest {
 
     @Test
     public void test_getUserByUsername_givenInvalidUsername() throws Exception {
+        when(userRepoMock.findUserByUsername("fake!!")).thenReturn(Optional.empty());
+
         mockMvc.perform(MockMvcRequestBuilders.get("/users/username/{username}", "fake!!"))
                     .andDo(print())
                     .andExpect(status().isNotFound());

@@ -54,6 +54,9 @@ public class BusinessControllerIntegrationTest {
 
     Business fullBusiness, minBusiness;
     User fullUser;
+    Review review;
+    Post post;
+    Hours hours;
     List<Business> list;
 
     @Autowired
@@ -92,7 +95,7 @@ public class BusinessControllerIntegrationTest {
         fullBusiness.setRegisterDatetime(now);
 
         // review for business
-        Review review = new Review();
+        review = new Review();
         review.setId(1);
         review.setBusiness(fullBusiness);
         review.setRating(5.0);
@@ -100,7 +103,7 @@ public class BusinessControllerIntegrationTest {
         review.setUser(fullUser);
 
         // hours for business
-        Hours hours = new Hours();
+        hours = new Hours();
         hours.setHoursId(1);
         hours.setBusiness(fullBusiness);
         hours.setDay(0);
@@ -109,7 +112,7 @@ public class BusinessControllerIntegrationTest {
         hours.setClosed(Timestamp.valueOf("2020-3-14 21:00:00"));
 
         // post for business
-        Post post = new Post();
+        post = new Post();
         post.setPostId(1);
         post.setBusiness(fullBusiness);
         post.setCreatedTime(now);
@@ -121,7 +124,7 @@ public class BusinessControllerIntegrationTest {
         fullBusiness.setHours(List.of(hours));
         fullBusiness.setPosts(List.of(post));
 
-        Business minBusiness = new Business();
+        minBusiness = new Business();
         minBusiness.setId(2);
         minBusiness.setBusinessName("Fake name");
         minBusiness.setEmail("fake email");
@@ -152,18 +155,18 @@ public class BusinessControllerIntegrationTest {
     }
 
     @Test
-    public void test_getUserById_givenInvalidId() throws Exception {
-        this.mockMvc.perform(MockMvcRequestBuilders.get("/users/id/{id}", -1))
+    public void test_getBusinessById_givenInvalidId() throws Exception {
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/businesses/id/{id}", -1))
                     .andDo(print())
                     .andExpect(status().isBadRequest());
     }
 
     @Test
-    public void test_getAllUsers() throws Exception {
+    public void test_getAllBusinesses() throws Exception {
 
-        when(userRepoMock.findAll()).thenReturn(list);
+        when(businessRepoMock.findAll()).thenReturn(list);
 
-        this.mockMvc.perform(MockMvcRequestBuilders.get("/users"))
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/businesses"))
                     .andDo(print())
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
@@ -171,52 +174,49 @@ public class BusinessControllerIntegrationTest {
     }
 
     @Test
-    public void test_getUserByEmail_givenValidEmail() throws Exception {
-        when(userRepoMock.findUserByEmail(minUser.getEmail())).thenReturn(Optional.of(minUser));
+    public void test_getBusinessByEmail_givenValidEmail() throws Exception {
+        when(businessRepoMock.findBusinessByEmail(minBusiness.getEmail())).thenReturn(Optional.of(minBusiness));
 
-        this.mockMvc.perform(MockMvcRequestBuilders.get("/users/email/{email}", minUser.getEmail()))
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/busiesses/email/{email}", minBusiness.getEmail()))
                     .andDo(print())
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-                    .andExpect(jsonPath("$.userId").value(minUser.getUserId()))
-                    .andExpect(jsonPath("$.username").value(minUser.getUsername()))
-                    .andExpect(jsonPath("$.password").value(minUser.getPassword()))
-                    .andExpect(jsonPath("$.firstName").value(minUser.getFirstName()))
-                    .andExpect(jsonPath("$.lastName").value(minUser.getLastName()))
-                    .andExpect(jsonPath("$.email").value(minUser.getEmail()));
+                    .andExpect(jsonPath("$.id").value(minBusiness.getId()))
+                    .andExpect(jsonPath("$.businessName").value(minBusiness.getBusinessName()))
+                    .andExpect(jsonPath("$.email").value(minBusiness.getEmail()))
+                    .andExpect(jsonPath("$.businessType").value(minBusiness.getBusinessType()));
     }
 
     @Test
-    public void test_getUserByEmail_givenInvalidEmail() throws Exception {
-        when(userRepoMock.findUserByEmail("fakeEmail@gmail.com")).thenReturn(Optional.empty());
+    public void test_getBusinessByEmail_givenInvalidEmail() throws Exception {
+        when(businessRepoMock.findBusinessByEmail("fakeEmail@gmail.com")).thenReturn(Optional.empty());
 
-        this.mockMvc.perform(MockMvcRequestBuilders.get("/users/email/{email}", "fakeEmail@gmail.abc"))
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/businesses/email/{email}", "fakeEmail@gmail.abc"))
                     .andDo(print())
                     .andExpect(status().isNotFound());
     }
 
     @Test
-    public void test_getUserByUsername_givenValidUsername() throws Exception {
-        when(userRepoMock.findUserByUsername(fullUser.getUsername())).thenReturn(Optional.of(fullUser));
+    public void test_getBusinessByName_givenValidName() throws Exception {
+        when(businessRepoMock.findBusinessByBusinessName(fullBusiness.getBusinessName())).thenReturn(Optional.of(fullBusiness));
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/users/username/{username}", fullUser.getUsername()))
+        mockMvc.perform(MockMvcRequestBuilders.get("/businesses/name/{name}", fullBusiness.getBusinessName()))
                     .andDo(print())
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-                    .andExpect(jsonPath("$.userId").value(fullUser.getUserId()))
-                    .andExpect(jsonPath("$.username").value(fullUser.getUsername()))
-                    .andExpect(jsonPath("$.password").value(fullUser.getPassword()))
-                    .andExpect(jsonPath("$.firstName").value(fullUser.getFirstName()))
-                    .andExpect(jsonPath("$.lastName").value(fullUser.getLastName()))
-                    .andExpect(jsonPath("$.email").value(fullUser.getEmail()))
-                    .andExpect(jsonPath("$.active").value(fullUser.isActive()))
-                    .andExpect(jsonPath("$.phoneNumber").value(fullUser.getPhoneNumber()))
-                    .andExpect(jsonPath("$.role").value(fullUser.getRole().toString().toUpperCase()));
+                    .andExpect(jsonPath("$.id").value(fullBusiness.getId()))
+                    .andExpect(jsonPath("$.businessName").value(fullBusiness.getBusinessName()))
+                    .andExpect(jsonPath("$.email").value(fullBusiness.getEmail()))
+                    .andExpect(jsonPath("$.businessType").value(fullBusiness.getBusinessType()))
+                    .andExpect(jsonPath("$.location").value(fullBusiness.getLocation()))
+                    .andExpect(jsonPath("$.active").value(fullBusiness.isActive()));
     }
 
     @Test
-    public void test_getUserByUsername_givenInvalidUsername() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/users/username/{username}", "fake!!"))
+    public void test_getBusinessByName_givenInvalidName() throws Exception {
+        when(businessRepoMock.findBusinessByBusinessName("fake!!")).thenReturn(Optional.empty());
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/businesses/name/{name}", "fake!!"))
                     .andDo(print())
                     .andExpect(status().isNotFound());
     }
@@ -230,7 +230,7 @@ public class BusinessControllerIntegrationTest {
         newUser.setLastName("last");
         newUser.setEmail("email@mail.com");
         newUser.setRole(Role.USER);
-        when(userRepoMock.save(newUser)).thenReturn(null);
+        when(businessRepoMock.save(newUser)).thenReturn(null);
 
         String newUserJson = "{" +
             "\"username\":\"" + newUser.getUsername() + "\", " + 
@@ -254,7 +254,7 @@ public class BusinessControllerIntegrationTest {
         newUser.setFirstName("first");
         newUser.setLastName("last");
         newUser.setEmail("email@mail.com");
-        when(userRepoMock.save(newUser)).thenReturn(null);
+        when(businessRepoMock.save(newUser)).thenReturn(null);
 
         String newUserJson = "{" +
             "\"password\":\"" + newUser.getPassword() + "\", " + 
@@ -272,7 +272,7 @@ public class BusinessControllerIntegrationTest {
     @Test
     public void testUpdate_onValidUpdatedUser() throws Exception {
         minUser.setRole(Role.ADMIN);
-        when(userRepoMock.save(minUser)).thenReturn(null);
+        when(businessRepoMock.save(minUser)).thenReturn(null);
 
         String minUserJson = "{" +
             "\"userId\":\"" + minUser.getUserId() + "\", " + 
@@ -299,7 +299,7 @@ public class BusinessControllerIntegrationTest {
         newUser.setLastName("last");
         newUser.setEmail("email@mail.com");
         newUser.setRole(Role.USER);
-        when(userRepoMock.save(newUser)).thenReturn(null);
+        when(businessRepoMock.save(newUser)).thenReturn(null);
 
         String newUserJson = "{" +
             "\"username\":\"" + newUser.getUsername() + "\", " + 
@@ -320,8 +320,8 @@ public class BusinessControllerIntegrationTest {
     @Test
     public void testUpdate_withInvalidUser() throws Exception {
         minUser.setRole(Role.ADMIN);
-        when(userRepoMock.save(minUser)).thenReturn(null);
-        when(userRepoMock.findUserByUsername(fullUser.getUsername())).thenReturn(Optional.of(fullUser));
+        when(businessRepoMock.save(minUser)).thenReturn(null);
+        when(businessRepoMock.findUserByUsername(fullUser.getUsername())).thenReturn(Optional.of(fullUser));
 
         String minUserJson = "{" +
             "\"userId\":\"" + minUser.getUserId() + "\", " + 
@@ -341,7 +341,7 @@ public class BusinessControllerIntegrationTest {
 
     @Test
     public void testDelete_withValidUserId() throws Exception {
-        when(userRepoMock.findById(fullUser.getUserId())).thenReturn(Optional.of(fullUser));
+        when(businessRepoMock.findById(fullUser.getUserId())).thenReturn(Optional.of(fullUser));
 
         mockMvc.perform(MockMvcRequestBuilders.delete("/users/id/{id}", fullUser.getUserId()))
             .andExpect(status().isOk());

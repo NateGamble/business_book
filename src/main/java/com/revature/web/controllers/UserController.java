@@ -54,7 +54,7 @@ public class UserController {
      * Handles an HTTPRequest for getting all users
      * @return a List of all Users
      */
-    @Secured(allowedRoles = "ADMIN")
+    //@Secured(allowedRoles = "ADMIN")
     @ResponseStatus(HttpStatus.OK)
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     //@Secured(allowedRoles = {"Admin"})
@@ -96,7 +96,7 @@ public class UserController {
      * @param id the id value for the User
      * @return a User object
      */
-    @Secured(allowedRoles = "ADMIN")
+    //@Secured(allowedRoles = "ADMIN")
     @ResponseStatus(HttpStatus.OK)
     @GetMapping(path = "/id/{id}")
     public User getUserById(@PathVariable int id) {
@@ -108,7 +108,7 @@ public class UserController {
      * @param username the username of the desired User
      * @return a User object
      */
-    @Secured(allowedRoles = "ADMIN")
+    //@Secured(allowedRoles = "ADMIN")
     @ResponseStatus(HttpStatus.OK)
     @GetMapping(path = "/username/{username}")
     public User getUserByUsername(@PathVariable String username) {
@@ -120,7 +120,7 @@ public class UserController {
      * @param email the email of the desired User
      * @return a User object
      */
-    @Secured(allowedRoles = "ADMIN")
+    //@Secured(allowedRoles = "ADMIN")
     @ResponseStatus(HttpStatus.OK)
     @GetMapping(path = "/email/{email}")
     public User getUserByEmail(@PathVariable String email) {
@@ -161,7 +161,7 @@ public class UserController {
      * @param id the id value of the User to delete
      */
     // How do we want to handle a delete?
-    @Secured(allowedRoles = "ADMIN")
+    //@Secured(allowedRoles = "ADMIN")
     @ResponseStatus(HttpStatus.OK)
     @DeleteMapping(path = "/id/{id}")
     public void deleteUserById(@PathVariable int id) {
