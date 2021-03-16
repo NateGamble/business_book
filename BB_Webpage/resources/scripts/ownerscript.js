@@ -41,11 +41,16 @@ function printBusinesses(businesses) {
     headerCell5.setAttribute("scope", "col");
     headerCell5.textContent = "Update Business";
 
+    let headerCell6 = document.createElement("th");
+    headerCell6.setAttribute("scope", "col");
+    headerCell6.textContent = "Reset fields";
+
     tableHeaderRow.appendChild(headerCell1);
     tableHeaderRow.appendChild(headerCell2);
     tableHeaderRow.appendChild(headerCell3);
     tableHeaderRow.appendChild(headerCell4);
     tableHeaderRow.appendChild(headerCell5);
+    tableHeaderRow.appendChild(headerCell6);
 
     table.appendChild(tableHeaderRow);
 
@@ -88,11 +93,18 @@ function printBusinesses(businesses) {
         updateButton.addEventListener("click", () => updateBusiness(biz, name));
         updateCell.appendChild(updateButton);
 
+        let resetCell = document.createElement("td");
+        let resetButton = document.createElement("button");
+        resetButton.textContent = "Reset";
+        resetButton.addEventListener("click", () => resetBusiness(biz, name));
+        resetCell.appendChild(resetButton);
+
         tableBizRow.appendChild(businessnameCell);
         tableBizRow.appendChild(emailCell);
         tableBizRow.appendChild(locationCell);
         tableBizRow.appendChild(businesstypeCell);
         tableBizRow.appendChild(updateCell);
+        tableBizRow.appendChild(resetCell);
 
         table.appendChild(tableBizRow);
     });
@@ -109,4 +121,13 @@ function updateBusiness(biz, name) {
     biz.businessType = updateRow[3].value;
 
     console.log(biz);
+}
+
+function resetBusiness(biz, name) {
+    let updateRow = document.querySelectorAll('input[name="' + name + '"]');
+
+    updateRow[0].value = biz.businessName;
+    updateRow[1].value = biz.email;
+    updateRow[2].value = biz.location;
+    updateRow[3].value = biz.businessType;
 }
