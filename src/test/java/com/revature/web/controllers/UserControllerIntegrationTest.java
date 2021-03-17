@@ -200,7 +200,7 @@ public class UserControllerIntegrationTest {
             "}";
 
         mockMvc.perform(MockMvcRequestBuilders.post("/users")
-            .contentType(MediaType.APPLICATION_JSON)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
             .content(newUserJson))
             .andExpect(status().isCreated());
     }

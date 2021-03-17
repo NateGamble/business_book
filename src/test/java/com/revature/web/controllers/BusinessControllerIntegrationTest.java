@@ -177,7 +177,7 @@ public class BusinessControllerIntegrationTest {
     public void test_getBusinessByEmail_givenValidEmail() throws Exception {
         when(businessRepoMock.findBusinessByEmail(minBusiness.getEmail())).thenReturn(Optional.of(minBusiness));
 
-        this.mockMvc.perform(MockMvcRequestBuilders.get("/busiesses/email/{email}", minBusiness.getEmail()))
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/businesses/email/{email}", minBusiness.getEmail()))
                     .andDo(print())
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
@@ -222,134 +222,112 @@ public class BusinessControllerIntegrationTest {
     }
 
     @Test
-    public void test_createNewUser_givenValidUser() throws Exception {
-        User newUser = new User();
-        newUser.setUsername("newUser");
-        newUser.setPassword("pass");
-        newUser.setFirstName("first");
-        newUser.setLastName("last");
-        newUser.setEmail("email@mail.com");
-        newUser.setRole(Role.USER);
-        when(businessRepoMock.save(newUser)).thenReturn(null);
+    public void test_createNewBusiness_givenValidBusiness() throws Exception {
+        Business newBusiness = new Business();
+        minBusiness.setBusinessName("new business");
+        minBusiness.setEmail("new email");
+        minBusiness.setBusinessType("Newsstand");
 
-        String newUserJson = "{" +
-            "\"username\":\"" + newUser.getUsername() + "\", " + 
-            "\"password\":\"" + newUser.getPassword() + "\", " + 
-            "\"firstName\":\"" + newUser.getFirstName() + "\", " + 
-            "\"lastName\":\"" + newUser.getLastName() + "\", " + 
-            "\"email\":\"" + newUser.getEmail() + "\", " + 
-            "\"role\":\"" + newUser.getRole().toString().toUpperCase() + "\"" + 
+        when(businessRepoMock.save(newBusiness)).thenReturn(null);
+
+        String newBusinessJson = "{" +
+            "\"businessName\":\"" + newBusiness.getBusinessName() + "\", " + 
+            "\"email\":\"" + newBusiness.getEmail() + "\", " + 
+            "\"businessType\":\"" + newBusiness.getBusinessType() + "\"" + 
             "}";
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/users")
+        mockMvc.perform(MockMvcRequestBuilders.post("/businesses")
             .contentType(MediaType.APPLICATION_JSON)
-            .content(newUserJson))
+            .content(newBusinessJson))
             .andExpect(status().isCreated());
     }
 
     @Test
-    public void test_createNewUser_givenInvalidUser() throws Exception {
-        User newUser = new User();
-        newUser.setPassword("pass");
-        newUser.setFirstName("first");
-        newUser.setLastName("last");
-        newUser.setEmail("email@mail.com");
-        when(businessRepoMock.save(newUser)).thenReturn(null);
+    public void test_createNewBusiness_givenInvalidBusiness() throws Exception {
+        Business newBusiness = new Business();
+        newBusiness.setEmail("new email");
+        when(businessRepoMock.save(newBusiness)).thenReturn(null);
 
-        String newUserJson = "{" +
-            "\"password\":\"" + newUser.getPassword() + "\", " + 
-            "\"firstName\":\"" + newUser.getFirstName() + "\", " + 
-            "\"lastName\":\"" + newUser.getLastName() + "\", " + 
-            "\"email\":\"" + newUser.getEmail() + "\"" +
+        String newBusinessJson = "{" +
+            "\"email\":\"" + newBusiness.getEmail() + "\"" +
             "}";
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/users")
+        mockMvc.perform(MockMvcRequestBuilders.post("/businesses")
             .contentType(MediaType.APPLICATION_JSON)
-            .content(newUserJson))
+            .content(newBusinessJson))
             .andExpect(status().isBadRequest());
     }
 
     @Test
-    public void testUpdate_onValidUpdatedUser() throws Exception {
-        minUser.setRole(Role.ADMIN);
-        when(businessRepoMock.save(minUser)).thenReturn(null);
+    public void testUpdate_onValidUpdatedBusiness() throws Exception {
+        minBusiness.setBusinessName("new business");
+        when(businessRepoMock.save(minBusiness)).thenReturn(null);
 
-        String minUserJson = "{" +
-            "\"userId\":\"" + minUser.getUserId() + "\", " + 
-            "\"username\":\"" + minUser.getUsername() + "\", " + 
-            "\"password\":\"" + minUser.getPassword() + "\", " + 
-            "\"firstName\":\"" + minUser.getFirstName() + "\", " + 
-            "\"lastName\":\"" + minUser.getLastName() + "\", " + 
-            "\"email\":\"" + minUser.getEmail() + "\", " + 
-            "\"role\":\"" + minUser.getRole().toString().toUpperCase() + "\"" + 
+        String minBusinessJson = "{" +
+            "\"businessName\":\"" + minBusiness.getBusinessName() + "\", " + 
+            "\"email\":\"" + minBusiness.getEmail() + "\", " + 
+            "\"businessType\":\"" + minBusiness.getBusinessType() + "\"" + 
             "}";
 
-        mockMvc.perform(MockMvcRequestBuilders.put("/users")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(minUserJson))
-            .andExpect(status().isNoContent());
+        // getting null pointer here
+        mockMvc.perform(MockMvcRequestBuilders.put("/businesses")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(minBusinessJson))
+                .andExpect(status().isNoContent());
     }
 
     @Test
-    public void testUpdate_onValidNewUser() throws Exception {
-        User newUser = new User();
-        newUser.setUsername("newUser");
-        newUser.setPassword("pass");
-        newUser.setFirstName("first");
-        newUser.setLastName("last");
-        newUser.setEmail("email@mail.com");
-        newUser.setRole(Role.USER);
-        when(businessRepoMock.save(newUser)).thenReturn(null);
+    public void testUpdate_onValidNewBusiness() throws Exception {
+        Business newBusiness = new Business();
+        newBusiness.setBusinessName("new business");
+        newBusiness.setEmail("new email");
+        newBusiness.setBusinessType("Newsstand");
 
-        String newUserJson = "{" +
-            "\"username\":\"" + newUser.getUsername() + "\", " + 
-            "\"password\":\"" + newUser.getPassword() + "\", " + 
-            "\"firstName\":\"" + newUser.getFirstName() + "\", " + 
-            "\"lastName\":\"" + newUser.getLastName() + "\", " + 
-            "\"email\":\"" + newUser.getEmail() + "\", " + 
-            "\"role\":\"" + newUser.getRole().toString().toUpperCase() + "\"" + 
+        when(businessRepoMock.save(newBusiness)).thenReturn(null);
+
+        String newBusinessJson = "{" +
+            "\"businessName\":\"" + newBusiness.getBusinessName() + "\", " + 
+            "\"email\":\"" + newBusiness.getEmail() + "\", " + 
+            "\"businessType\":\"" + newBusiness.getBusinessType() + "\"" + 
             "}";
 
-        // expected 201, is 204
-        mockMvc.perform(MockMvcRequestBuilders.put("/users")
+        mockMvc.perform(MockMvcRequestBuilders.put("/businesses")
             .contentType(MediaType.APPLICATION_JSON)
-            .content(newUserJson))
+            .content(newBusinessJson))
             .andExpect(status().isCreated());
     }
 
     @Test
-    public void testUpdate_withInvalidUser() throws Exception {
-        minUser.setRole(Role.ADMIN);
-        when(businessRepoMock.save(minUser)).thenReturn(null);
-        when(businessRepoMock.findUserByUsername(fullUser.getUsername())).thenReturn(Optional.of(fullUser));
+    public void testUpdate_withInvalidBusiness() throws Exception {
+        minBusiness.setEmail(fullBusiness.getEmail());
+        when(businessRepoMock.save(minBusiness)).thenReturn(null);
+        when(businessRepoMock.findBusinessByEmail(minBusiness.getEmail())).thenReturn(Optional.of(fullBusiness));
 
-        String minUserJson = "{" +
-            "\"userId\":\"" + minUser.getUserId() + "\", " + 
-            "\"username\":\"" + fullUser.getUsername() + "\", " + 
-            "\"password\":\"" + minUser.getPassword() + "\", " + 
-            "\"firstName\":\"" + minUser.getFirstName() + "\", " + 
-            "\"lastName\":\"" + minUser.getLastName() + "\", " + 
-            "\"email\":\"" + minUser.getEmail() + "\", " + 
-            "\"role\":\"" + minUser.getRole().toString().toUpperCase() + "\"" + 
+        
+
+        String minBusinessJson = "{" +
+            "\"businessName\":\"" + minBusiness.getBusinessName() + "\", " + 
+            "\"email\":\"" + minBusiness.getEmail() + "\", " + 
+            "\"businessType\":\"" + minBusiness.getBusinessType() + "\"" + 
             "}";
 
-        mockMvc.perform(MockMvcRequestBuilders.put("/users")
+        mockMvc.perform(MockMvcRequestBuilders.put("/businesses")
             .contentType(MediaType.APPLICATION_JSON)
-            .content(minUserJson))
+            .content(minBusinessJson))
             .andExpect(status().isConflict());
     }
 
     @Test
-    public void testDelete_withValidUserId() throws Exception {
-        when(businessRepoMock.findById(fullUser.getUserId())).thenReturn(Optional.of(fullUser));
+    public void testDelete_withValidBusinessId() throws Exception {
+        when(businessRepoMock.findById(fullBusiness.getId())).thenReturn(Optional.of(fullBusiness));
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/users/id/{id}", fullUser.getUserId()))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/businesses/id/{id}", fullBusiness.getId()))
             .andExpect(status().isOk());
     }
 
     @Test
-    public void testDelete_withInvalidUserId() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.delete("/users/id/{id}", -1))
+    public void testDelete_withInvalidBusinessId() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.delete("/businesses/id/{id}", -1))
             .andExpect(status().isBadRequest());
     }
     
