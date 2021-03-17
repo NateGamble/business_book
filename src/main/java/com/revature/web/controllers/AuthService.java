@@ -60,7 +60,7 @@ public class AuthService {
         Cookie cookie = new Cookie("bb-token", principal.getToken());
         cookie.setPath("/");
         response.addCookie(cookie);
-        response.setHeader("Set-Cookie", "key=" + cookie.getValue() + "; Path=/; SameSite=strict");
+        response.setHeader("Set-Cookie", "key=" + cookie.getValue() + "; Path=/; SameSite=None; Secure");
         return principal;
     }
 
