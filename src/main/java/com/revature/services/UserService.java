@@ -4,6 +4,7 @@ import at.favre.lib.crypto.bcrypt.BCrypt;
 import com.revature.exceptions.InvalidRequestException;
 import com.revature.exceptions.ResourceNotFoundException;
 import com.revature.exceptions.ResourcePersistenceException;
+import com.revature.models.Business;
 import com.revature.models.Role;
 import com.revature.models.User;
 import com.revature.repos.UserRepository;
@@ -177,6 +178,15 @@ public class UserService {
 
     public void delete(User user) {
         userRepo.delete(user);
+    }
+
+    public List<Business> findFavorites(int id) {
+        if (id <= 0) {
+            throw new InvalidRequestException();
+        }
+
+        User user = userRepo.findById(id).orElseThrow(ResourceNotFoundException::new);
+        return user.getFavorites();
     }
 
     public Boolean isUserValid(User user) {

@@ -304,6 +304,11 @@ public class BusinessController {
         }
     }
 
+    /**
+     * Returns the User for the JWT in the HttpRequest
+     * @param req the HTTPRequest that will have the JWT
+     * @return the User logged in
+     */
     public User getUserFromJwt (HttpServletRequest req) {
         // Get the cookies (JWT) from the request
         Cookie[] cookies = req.getCookies();
