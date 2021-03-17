@@ -11,10 +11,7 @@ import com.revature.util.JwtGenerator;
 import com.revature.util.JwtParser;
 import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
+import org.springframework.http.*;
 //import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -59,9 +56,11 @@ public class AuthService {
     @PostMapping(path = "/login", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public Principal authenticateUser(@RequestBody @Valid Credentials credentials, HttpServletResponse response) {
         Principal principal = authenticate(credentials.getUsername(), credentials.getPassword());
+
         Cookie cookie = new Cookie("bb-token", principal.getToken());
         cookie.setPath("/");
         response.addCookie(cookie);
+        response.setHeader("Set-Cookie", "key=" + cookie.getValue() + "; SameSite=strict");
         return principal;
     }
 
