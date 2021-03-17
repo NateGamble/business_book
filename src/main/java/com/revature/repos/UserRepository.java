@@ -1,5 +1,6 @@
 package com.revature.repos;
 
+import com.revature.models.Business;
 import com.revature.models.User;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
@@ -14,5 +15,4 @@ public interface UserRepository extends CrudRepository<User, Integer> {
     List<User> findUsersByRole(String role);
     Optional<User> findUserByUsernameAndPassword(String username, String password);
     Optional<User> findUserByEmail(String email);
-
 }

@@ -3,7 +3,9 @@ package com.revature.web.controllers;
 import at.favre.lib.crypto.bcrypt.BCrypt;
 import com.revature.dtos.Principal;
 import com.revature.exceptions.ResourceNotFoundException;
+import com.revature.models.Business;
 import com.revature.models.User;
+import com.revature.services.BusinessService;
 import com.revature.services.UserService;
 import com.revature.util.JwtParser;
 import com.revature.util.Secured;
@@ -38,6 +40,8 @@ public class UserController {
      */
     private final JwtParser jwtParser;
 
+    private final BusinessService bizService;
+
 
     /**
      * UserController all args constructor
@@ -45,9 +49,10 @@ public class UserController {
      * @param jwtParser the JwtParser given by Spring
      */
     @Autowired
-    public UserController (UserService userService, JwtParser jwtParser) {
+    public UserController (UserService userService, JwtParser jwtParser, BusinessService bizService) {
         this.userService = userService;
         this.jwtParser = jwtParser;
+        this.bizService = bizService;
     }
 
     /**
@@ -57,7 +62,6 @@ public class UserController {
     @Secured(allowedRoles = "ADMIN")
     @ResponseStatus(HttpStatus.OK)
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    //@Secured(allowedRoles = {"Admin"})
     public List<User> getAllUsers() {
         return userService.getAllUsers();
     }
@@ -155,6 +159,27 @@ public class UserController {
         }
     }
 
+    @GetMapping(path = "/favorites")
+    public List<Business> getFavorites(HttpServletRequest req) {
+        User user = getUserFromJwt(req);
+        return userService.findFavorites(user.getUserId());
+    }
+
+    @PostMapping(path = "/favorites/businessId/{id}")
+    public void addFavorite(@PathVariable int id, HttpServletRequest req) {
+        User user = getUserFromJwt(req);
+        Business bus = bizService.getBusinessById(id);
+        user.getFavorites().add(bus);
+        userService.updateProfile(user);
+    }
+
+    @DeleteMapping(path = "/favorites/businessId/{id}")
+    public void deleteFavorite(@PathVariable int id, HttpServletRequest req) {
+        User user = getUserFromJwt(req);
+        Business bus = bizService.getBusinessById(id);
+        user.getFavorites().remove(bus);
+        userService.updateProfile(user);
+    }
 
     /**
      * Handles an HTTPRequest for deleting a User
@@ -167,5 +192,31 @@ public class UserController {
     public void deleteUserById(@PathVariable int id) {
         User user = userService.getUserById(id);
         userService.delete(user);
+    }
+
+    /**
+     * Returns the User for the JWT in the HttpRequest
+     * @param req the HTTPRequest that will have the JWT
+     * @return the User logged in
+     */
+    public User getUserFromJwt (HttpServletRequest req) {
+        // Get the cookies (JWT) from the request
+        Cookie[] cookies = req.getCookies();
+        String token = "";
+
+        // Loop through cookies to find the correct one in case there are multiple cookies
+        for (Cookie cookie : cookies) {
+
+            // Finding the JWT cookie
+            if (cookie.getName().equals("bb-token")) {
+                token = cookie.getValue();
+            }
+        }
+
+        // Create a Principal from the JWT
+        Principal principal = jwtParser.parseToken(token);
+
+        // Return the User found by the username from the Principal
+        return userService.getUserByUsername(principal.getUsername());
     }
 }
