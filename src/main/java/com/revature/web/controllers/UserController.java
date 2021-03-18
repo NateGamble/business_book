@@ -159,23 +159,26 @@ public class UserController {
         }
     }
 
-    @GetMapping(path = "/favorites")
-    public List<Business> getFavorites(HttpServletRequest req) {
-        User user = getUserFromJwt(req);
+    @GetMapping(path = "/favorites/user/{id}")
+    public List<Business> getFavorites(HttpServletRequest req, @PathVariable int id) {
+        User user = userService.getUserById(id);
+        /*User user = getUserFromJwt(req);*/
         return userService.findFavorites(user.getUserId());
     }
 
-    @PostMapping(path = "/favorites/businessId/{id}")
-    public void addFavorite(@PathVariable int id, HttpServletRequest req) {
-        User user = getUserFromJwt(req);
+    @PostMapping(path = "/favorites/businessId/{id}/user/{userId}")
+    public void addFavorite(@PathVariable int id, @PathVariable int userId, HttpServletRequest req) {
+        User user = userService.getUserById(userId);
+        /*User user = getUserFromJwt(req);*/
         Business bus = bizService.getBusinessById(id);
         user.getFavorites().add(bus);
         userService.updateProfile(user);
     }
 
-    @DeleteMapping(path = "/favorites/businessId/{id}")
-    public void deleteFavorite(@PathVariable int id, HttpServletRequest req) {
-        User user = getUserFromJwt(req);
+    @DeleteMapping(path = "/favorites/businessId/{id}/user/{userId}")
+    public void deleteFavorite(@PathVariable int id, @PathVariable int userId, HttpServletRequest req) {
+        User user = userService.getUserById(userId);
+        /*User user = getUserFromJwt(req);*/
         Business bus = bizService.getBusinessById(id);
         user.getFavorites().remove(bus);
         userService.updateProfile(user);
