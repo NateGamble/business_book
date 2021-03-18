@@ -120,7 +120,8 @@ public class BusinessController {
     public void addNewBusiness(@RequestBody Business biz, HttpServletRequest req) {
         Timestamp now = Timestamp.valueOf(LocalDateTime.now());
         biz.setRegisterDatetime(now);
-        biz.setOwner(getUserFromJwt(req));
+        biz.setOwner(userService.getUserByUsername(biz.getOwner().getUsername()));
+        /*biz.setOwner(getUserFromJwt(req));*/
         bizService.addBusiness(biz);
     }
 
@@ -314,6 +315,7 @@ public class BusinessController {
         Cookie[] cookies = req.getCookies();
         String token = "";
 
+        System.out.println("cookies " + cookies);
         // Loop through cookies to find the correct one in case there are multiple cookies
         for (Cookie cookie : cookies) {
 
