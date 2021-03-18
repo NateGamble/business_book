@@ -119,6 +119,45 @@ public class UserServiceTester {
         assertThrows(ResourceNotFoundException.class, () -> userService.getUsersByRole(userTwo.getRole()));
     }
 
+
+    @Test
+    @DisplayName("Verifying getUsersByRole() works as expected and pulls users by role")
+    public void testFindFavorites() {
+        //create a 'proxy call' for the User repository 'findUsersByRole to hone in on service testing
+        when(userRepo.findById(userTwo.getUserId())).thenReturn(Optional.ofNullable(userTwo));
+
+        assertEquals(userService.findFavorites(userTwo.getUserId()), userTwo.getFavorites());
+        verify(userRepo, times(1)).findById(userTwo.getUserId());
+    }
+
+    @Test
+    @DisplayName("Verifying errors thrown on getUsersByRoleInvalid for null role or no users found with role")
+    public void testFindFavoritesInvalid() {
+        assertThrows(ResourceNotFoundException.class, () -> userService.findFavorites(userTwo.getUserId()));
+        assertThrows(InvalidRequestException.class, () -> userService.findFavorites(0));
+    }
+
+
+
+    @Test
+    @DisplayName("Verifying getUsersByEmail() works as expected and pulls users by role")
+    public void getUsersByEmail() {
+        //create a 'proxy call' for the User repository 'findUsersByRole to hone in on service testing
+        when(userRepo.findUserByEmail(userTwo.getEmail())).thenReturn(Optional.ofNullable(userTwo));
+
+        assertEquals(userService.getUserByEmail(userTwo.getEmail()), userTwo);
+        verify(userRepo, times(1)).findUserByEmail(userTwo.getEmail());
+    }
+
+    @Test
+    @DisplayName("Verifying errors thrown on getUsersByRoleInvalid for null role or no users found with role")
+    public void getUsersByEmailInvalid() {
+        //check null role
+        assertThrows(InvalidRequestException.class, () -> userService.getUserByEmail(null));
+        assertThrows(InvalidRequestException.class, () -> userService.getUserByEmail(""));
+
+    }
+
     @Test
     @DisplayName("Verifying getUserByUsername() works as expected and pulls User")
     public void getUserByUsername() {
@@ -318,22 +357,22 @@ public class UserServiceTester {
     }
 
 
-
-    @Test
-    @DisplayName("Verifying SortUsers works as expected")
-    public void sortUsers() {
-//        SortedSet<User> sortedUsers = new TreeSet();
-//        userOne.setUsername("a");
-//        userTwo.setUsername("b");
-//        sortedUsers.add(userOne);
-//        sortedUsers.add(userTwo);
-        Set<User> unsortedUsers = new TreeSet<>();
-        userOne.setUsername("b");
-        userTwo.setUsername("a");
-        unsortedUsers.add(userOne);
-        unsortedUsers.add(userTwo);
-        //assertEquals(userService.sortUsers("username", unsortedUsers).first(), userTwo);
-
-    }
+//
+//    @Test
+//    @DisplayName("Verifying SortUsers works as expected")
+//    public void sortUsers() {
+////        SortedSet<User> sortedUsers = new TreeSet();
+////        userOne.setUsername("a");
+////        userTwo.setUsername("b");
+////        sortedUsers.add(userOne);
+////        sortedUsers.add(userTwo);
+//        Set<User> unsortedUsers = new TreeSet<>();
+//        userOne.setUsername("b");
+//        userTwo.setUsername("a");
+//        unsortedUsers.add(userOne);
+//        unsortedUsers.add(userTwo);
+//        //assertEquals(userService.sortUsers("username", unsortedUsers).first(), userTwo);
+//
+//    }
 
 }

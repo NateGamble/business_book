@@ -110,6 +110,17 @@ public class BusinessServiceTester {
         verify(bizRepo, times(1)).deleteById(1);
     }
 
+
+    @Test
+    @DisplayName("Verifying deleteBusinessById() works as expected and calls repo to delete business")
+    public void testUpdateBusiness() {
+
+        assertThrows(InvalidRequestException.class, () -> bizServices.updateBusiness(testEmptyBiz));
+        bizServices.updateBusiness(bizOne);
+        verify(bizRepo, times(1)).save(bizOne);
+    }
+
+
     @Test
     @DisplayName("Verifying errors thrown on getBusinessById() as expected")
     public void getBusinessByIdCheckInvalidId() {
@@ -254,11 +265,6 @@ public class BusinessServiceTester {
         verify(bizRepo, times(0)).save(bizTwo);
     }
 
-    //TODO: NEED TO IMPLEMENT DELETE METHOD IN BUSINESS SERVICE (NOT FINISHED)
-    //ALSO AN OWNER FUNCTION*
-    @Test
-    public void deleteBusiness() {
-    }
 
     @Test
     @DisplayName("Verifying findBusinessByOwner works as expected and pulls business")

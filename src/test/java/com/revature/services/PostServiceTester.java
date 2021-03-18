@@ -79,8 +79,9 @@ public class PostServiceTester {
     @Test
     @DisplayName("Verifying getPostByPostId() works as expected and pulls a post by id")
     public void testgetPostByPostId() {
+        post0.setPostId(1);
         when(postRepository.findById(post0.getPostId())).thenReturn(java.util.Optional.of(post0));
-        assertEquals(java.util.Optional.of(post0), postService.findPostByPostId(post0.getPostId()));
+        assertEquals(post0, postService.findPostByPostId(post0.getPostId()).get());
     }
 
     @Test
