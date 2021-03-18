@@ -274,12 +274,16 @@ public class BusinessController {
      * @param id the Business Id to review
      */
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping(path = "/id/{id}/reviews")
+    @PostMapping(path = "/id/{id}/user/{userId}/reviews")
     // @Secured(allowedRoles = {"USER"})
-    public void addNewBusinessReview (@RequestBody Review review, @PathVariable int id, HttpServletRequest req) {
+    public void addNewBusinessReview (@RequestBody Review review, @PathVariable int id,
+                                      @PathVariable int userId, HttpServletRequest req) {
         Business biz = bizService.getBusinessById(id);
+        User user = userService.getUserById(userId);
+
         review.setBusiness(biz);
-        review.setUser(getUserFromJwt(req));
+        review.setUser(user);
+        /*review.setUser(getUserFromJwt(req));*/
         reviewsService.createReview(review);
     }
 
