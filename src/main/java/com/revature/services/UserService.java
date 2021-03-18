@@ -16,18 +16,33 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Service class that handles {@link User} validity and uses {@link UserRepository}
+ * to interact with the database
+ */
 @Service
 public class UserService {
 
-    //private static final Logger LOG = LogManager.getLogger(UserService.class);
+    /**
+     * UserRepository that is managed by Spring
+     */
     private UserRepository userRepo;
 
+    /**
+     * Constructor for UserService
+     * @param repo the UserRepository from Spring
+     */
     @Autowired
     public UserService(UserRepository repo) {
         super();
         this.userRepo = repo;
     }
 
+    /**
+     * Gets a single User using the id
+     * @param id the id value of the User
+     * @return the User object with the desired id
+     */
     public User getUserById(int id) {
         if (id <= 0 ) {
             throw new InvalidRequestException();
@@ -35,6 +50,10 @@ public class UserService {
         return userRepo.findById(id).orElseThrow(ResourceNotFoundException::new);
     }
 
+    /**
+     * Adds a User to the database
+     * @param newUser the User to add
+     */
     public void register(User newUser) {
 
         if (!isUserValid(newUser)) throw new InvalidRequestException();
@@ -49,6 +68,10 @@ public class UserService {
         userRepo.save(newUser);
     }
 
+    /**
+     * Gets all User object
+     * @return a List of User objects
+     */
     public List<User> getAllUsers() {
 
         List<User> users = (List<User>) userRepo.findAll();
@@ -62,6 +85,11 @@ public class UserService {
     }
 
 
+    /**
+     * Gets the Users with a specified {@link Role}
+     * @param role the Role ENUM to search for
+     * @return a List of User objects with the desired Role
+     */
     public List<User> getUsersByRole(Role role) {
 
         List<User> users;
@@ -80,6 +108,11 @@ public class UserService {
 
     }
 
+    /**
+     * Gets a single User by their username
+     * @param username the User's username to find
+     * @return a User object with the desired username
+     */
     public User getUserByUsername(String username) {
 
         if (username == null || username.trim().equals("")) {
@@ -90,6 +123,11 @@ public class UserService {
 
     }
 
+    /**
+     * Gets a single User by their email
+     * @param email the String email of the User
+     * @return the User Object with the desired email
+     */
     public User getUserByEmail(String email) {
         if (email == null || email.trim().equals("")) {
             throw new InvalidRequestException();
@@ -97,6 +135,7 @@ public class UserService {
 
         return userRepo.findUserByEmail(email).orElseThrow(ResourceNotFoundException::new);
     }
+
 
     public boolean confirmAccount(int userId) {
 
@@ -146,6 +185,12 @@ public class UserService {
 //
 //    }
 
+    /**
+     * Provides a User object that corresponds to the given username & password
+     * @param username the username of the User
+     * @param password the password of the User
+     * @return the User object
+     */
     public User authenticate(String username, String password) {
 
         if (username == null || username.trim().equals("") || password == null || password.trim().equals("")) {
@@ -162,6 +207,10 @@ public class UserService {
 
     }
 
+    /**
+     * Updates a User in the database
+     * @param updatedUser the User object to update
+     */
     public void updateProfile(User updatedUser) {
         if (!isUserValid(updatedUser)) {
             throw new InvalidRequestException();
@@ -176,10 +225,19 @@ public class UserService {
 
     }
 
+    /**
+     * Deletes a User
+     * @param user the User object to delete
+     */
     public void delete(User user) {
         userRepo.delete(user);
     }
 
+    /**
+     * Gets the favorites of a User by User id
+     * @param id the id of the User
+     * @return a List of Business objects that the User has favorited
+     */
     public List<Business> findFavorites(int id) {
         if (id <= 0) {
             throw new InvalidRequestException();
@@ -189,6 +247,11 @@ public class UserService {
         return user.getFavorites();
     }
 
+    /**
+     * Checks the User object's fields for validity
+     * @param user the User object to check
+     * @return a boolean for if the User is valid or not
+     */
     public Boolean isUserValid(User user) {
         System.out.println(user);
         if (user == null) return false;
