@@ -1,7 +1,5 @@
 package com.revature.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.revature.util.RegexUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,6 +8,9 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.List;
 
+/**
+ * Java POJO representation of a Business in the Database
+ */
 @Entity
 @Table(name ="business")
 @Data
@@ -17,10 +18,13 @@ import java.util.List;
 @AllArgsConstructor
 public class Business {
 
+    /**
+     * Integer Id value of the Business
+     */
     @Id
     @Column(name="business_id")
     @GeneratedValue(strategy=GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     @ManyToOne(targetEntity = User.class, optional = false)
     @JoinColumn(name = "owner_id", columnDefinition = "int4 NOT NULL")

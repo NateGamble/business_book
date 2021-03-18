@@ -80,9 +80,9 @@ public class UserServiceTester {
     @Test
     @DisplayName("Verifying getUserById() works as expected and pulls user")
     public void getUserById() {
+        userTwo.setUserId(3);
         //create a 'proxy call' for the User repository 'findById()' method to hone in on the service class
         when(userRepo.findById(userTwo.getUserId())).thenReturn(java.util.Optional.of(userTwo));
-
         assertEquals(userService.getUserById(userTwo.getUserId()), userTwo);
         verify(userRepo, times(1)).findById(userTwo.getUserId());
     }
@@ -259,6 +259,62 @@ public class UserServiceTester {
         verify(userRepo, times(1)).save(userOne);
 
 //        assertTrue(userService.confirmAccount(userOne.getUserId()));
+    }
+
+
+    @Test
+    @DisplayName("Verifying authenticate() works as expected and pulls User")
+    public void authenticateTest() {
+        //create a 'proxy call' for the User repository 'findByUsernameAndPassword()' method to hone in on the service class
+        when(userRepo.findUserByUsernameAndPassword(userTwo.getUsername(), userTwo.getPassword()))
+                .thenReturn(java.util.Optional.of(userTwo));
+
+        assertEquals(userService.authenticate(userTwo.getUsername(), userTwo.getPassword()), userTwo);
+
+        verify(userRepo, times(1))
+                .findUserByUsernameAndPassword(userTwo.getUsername(), userTwo.getPassword());
+    }
+
+    @Test
+    @DisplayName("Verifying error thrown on authenticate if username and password are taken")
+    public void authenticateNoUserPass() {
+        assertThrows(InvalidRequestException.class, () ->
+                userService.authenticate(userOne.getUsername(), userOne.getPassword()));
+    }
+
+
+    @Test
+    @DisplayName("Verifying error thrown on authenticate() for null or empty string username or password")
+    public void authenticateNotNull() {
+        String username = null;
+        String password = "pass";
+
+        //throws null username exception
+        assertThrows(InvalidRequestException.class, () -> userService.authenticate(username, password));
+        //throws empty username exception
+        String emptyName = "";
+        assertThrows(InvalidRequestException.class, () -> userService.authenticate(emptyName, password));
+
+        String validName = "eric";
+        //throws null password exception
+        String nullPass = null;
+        assertThrows(InvalidRequestException.class, () -> userService.authenticate(validName, nullPass));
+
+        //throws null password exception
+        String emptyPass = "";
+        assertThrows(InvalidRequestException.class, () -> userService.authenticate(validName, emptyPass));
+    }
+
+    @Test
+    @DisplayName("Verifying error thrown on authenticate() for user not active")
+    public void authenticateNotActive() {
+        userTwo.setActive(false);
+        //create a 'proxy call' for the User repository 'findByUsernameAndPassword()' method to hone in on the service class
+        when(userRepo.findUserByUsernameAndPassword(userTwo.getUsername(), userTwo.getPassword()))
+                .thenReturn(java.util.Optional.of(userTwo));
+        assertThrows(InvalidRequestException.class, () ->
+                userService.authenticate(userTwo.getUsername(), userTwo.getPassword()));
+
     }
 
 

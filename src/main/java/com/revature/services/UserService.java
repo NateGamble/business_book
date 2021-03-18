@@ -4,6 +4,7 @@ import at.favre.lib.crypto.bcrypt.BCrypt;
 import com.revature.exceptions.InvalidRequestException;
 import com.revature.exceptions.ResourceNotFoundException;
 import com.revature.exceptions.ResourcePersistenceException;
+import com.revature.models.Business;
 import com.revature.models.Role;
 import com.revature.models.User;
 import com.revature.repos.UserRepository;
@@ -27,7 +28,6 @@ public class UserService {
         this.userRepo = repo;
     }
 
-    //DONE TESTING
     public User getUserById(int id) {
         if (id <= 0 ) {
             throw new InvalidRequestException();
@@ -35,7 +35,6 @@ public class UserService {
         return userRepo.findById(id).orElseThrow(ResourceNotFoundException::new);
     }
 
-    //DONE TESTING
     public void register(User newUser) {
 
         if (!isUserValid(newUser)) throw new InvalidRequestException();
@@ -50,7 +49,6 @@ public class UserService {
         userRepo.save(newUser);
     }
 
-    //DONE TESTING
     public List<User> getAllUsers() {
 
         List<User> users = (List<User>) userRepo.findAll();
@@ -110,43 +108,43 @@ public class UserService {
 
     }
 
-    public SortedSet<User> sortUsers(String sortCriterion, Set<User> usersForSorting) {
-
-        SortedSet<User> users = new TreeSet<>(usersForSorting);
-
-        switch (sortCriterion.toLowerCase()) {
-            case "username":
-                users = users.stream()
-                        .collect(Collectors.toCollection(() -> {
-                            return new TreeSet<>(Comparator.comparing(User::getUsername, String::compareTo));
-                        }));
-                break;
-            case "first":
-                users = users.stream()
-                        .collect(Collectors.toCollection(() -> {
-                            return new TreeSet<>(Comparator.comparing(User::getFirstName, String::compareTo));
-                        }));
-                break;
-            case "last":
-                users = users.stream()
-                        .collect(Collectors.toCollection(() -> {
-                            return new TreeSet<>(Comparator.comparing(User::getLastName, String::compareTo));
-                        }));
-                break;
-            case "role":
-                users = users.stream()
-                        .collect(Collectors.toCollection(() -> {
-                            return new TreeSet<>(Comparator.comparing(User::getRole, Enum::compareTo));
-                        }));
-                break;
-            default:
-                throw new ResourceNotFoundException();
-
-        }
-
-        return users;
-
-    }
+//    public SortedSet<User> sortUsers(String sortCriterion, Set<User> usersForSorting) {
+//
+//        SortedSet<User> users = new TreeSet<>(usersForSorting);
+//
+//        switch (sortCriterion.toLowerCase()) {
+//            case "username":
+//                users = users.stream()
+//                        .collect(Collectors.toCollection(() -> {
+//                            return new TreeSet<>(Comparator.comparing(User::getUsername, String::compareTo));
+//                        }));
+//                break;
+//            case "first":
+//                users = users.stream()
+//                        .collect(Collectors.toCollection(() -> {
+//                            return new TreeSet<>(Comparator.comparing(User::getFirstName, String::compareTo));
+//                        }));
+//                break;
+//            case "last":
+//                users = users.stream()
+//                        .collect(Collectors.toCollection(() -> {
+//                            return new TreeSet<>(Comparator.comparing(User::getLastName, String::compareTo));
+//                        }));
+//                break;
+//            case "role":
+//                users = users.stream()
+//                        .collect(Collectors.toCollection(() -> {
+//                            return new TreeSet<>(Comparator.comparing(User::getRole, Enum::compareTo));
+//                        }));
+//                break;
+//            default:
+//                throw new ResourceNotFoundException();
+//
+//        }
+//
+//        return users;
+//
+//    }
 
     public User authenticate(String username, String password) {
 
@@ -159,7 +157,7 @@ public class UserService {
         if (authUser.isActive()) {
             return authUser;
         } else {
-            throw new InvalidRequestException("Account not confirmed.");
+            throw new InvalidRequestException("Account innactive.");
         }
 
     }
@@ -180,6 +178,15 @@ public class UserService {
 
     public void delete(User user) {
         userRepo.delete(user);
+    }
+
+    public List<Business> findFavorites(int id) {
+        if (id <= 0) {
+            throw new InvalidRequestException();
+        }
+
+        User user = userRepo.findById(id).orElseThrow(ResourceNotFoundException::new);
+        return user.getFavorites();
     }
 
     public Boolean isUserValid(User user) {

@@ -72,28 +72,39 @@ public class AuthService {
      * @return a Principal object containing basic user information and a web token
      */
     public Principal authenticate(String username, String password) {
+
         try {
 
+            // Getting the User with the hashed password from the database
             User hashedUser = userService.getUserByUsername(username);
 
+            // Creating a BCrypt result object to check if the given password matches the hashed password
             BCrypt.Result result = BCrypt.verifyer().verify(password.toCharArray(), hashedUser.getPassword());
 
+            // Creating a Principal of the hashed User
             Principal principal = new Principal(hashedUser);
 
+            // If the result is true
             if (result.verified) {
+
+                // Generate a JWT from the Principal
                 String token = jwtGenerator.createJwt(principal);
+
+                // Set the Principal's token
                 principal.setToken(token);
+
             } else {
+
+                // If the result is false, throw not confirmed
                 throw new AuthenticationException("Account not confirmed.");
             }
 
-            // User authUser = userService.authenticate(username, password);
-            //Principal principal = new Principal(authUser);
-            //String token = jwtGenerator.createJwt(principal);
-            //principal.setToken(token);
-
             return principal;
-        }catch(AuthenticationException e){throw new AuthenticationException("Account not confirmed.");}
+
+        }catch(AuthenticationException e){
+
+            throw new AuthenticationException("Account not confirmed.");
+        }
     }
 
 
@@ -103,7 +114,10 @@ public class AuthService {
      * @return the role inside the token
      */
     public Role getTokenAuthorities(String token) {
+
+        // Creates a Principal from the given token
         Principal principal = jwtParser.parseToken(token);
+        
         if (principal == null) {
             throw new RuntimeException("Principal within token was null!");
         }

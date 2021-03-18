@@ -19,7 +19,7 @@ public class Hours {
     @Id
     @Column(name="hours_id")
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private int hoursId;
+    private Integer hoursId;
 
     @ManyToOne(targetEntity = Business.class, optional = false)
     @JoinColumn(name = "business_id", columnDefinition = "int4 NOT NULL")
