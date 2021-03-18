@@ -84,7 +84,7 @@ public class BusinessController {
      */
     @ResponseStatus(HttpStatus.OK)
     @GetMapping(path = "/id/{id}")
-    @Secured(allowedRoles = {"ADMIN"})
+    // @Secured(allowedRoles = {"ADMIN"})
     public Business getBusinessById(@PathVariable int id) { return bizService.getBusinessById(id); }
 
     /**
@@ -93,7 +93,7 @@ public class BusinessController {
      */
     @ResponseStatus(HttpStatus.OK)
     @DeleteMapping(path = "/reviews/{id}")
-    @Secured(allowedRoles = {"ADMIN"})
+    // @Secured(allowedRoles = {"ADMIN"})
     public void deleteBusinessReviewById(@PathVariable int id) {
         Review review = reviewsService.findReviewByReviewId(id).get();
         reviewsService.deleteReview(review);
@@ -105,7 +105,7 @@ public class BusinessController {
      */
     @ResponseStatus(HttpStatus.OK)
     @DeleteMapping(path = "/id/{id}")
-    @Secured(allowedRoles = {"ADMIN", "OWNER"})
+    // @Secured(allowedRoles = {"ADMIN", "OWNER"})
     public void deleteBusinessById(@PathVariable int id) {
         bizService.deleteBusinessById(id);
     }
@@ -116,7 +116,7 @@ public class BusinessController {
      */
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping()
-    @Secured(allowedRoles = {"ADMIN", "OWNER"})
+    // @Secured(allowedRoles = {"ADMIN", "OWNER"})
     public void addNewBusiness(@RequestBody Business biz, HttpServletRequest req) {
         Timestamp now = Timestamp.valueOf(LocalDateTime.now());
         biz.setRegisterDatetime(now);
@@ -130,7 +130,7 @@ public class BusinessController {
      * @param resp the HTTPServletResponse
      */
     @PutMapping()
-    @Secured(allowedRoles = {"ADMIN", "OWNER"})
+    // @Secured(allowedRoles = {"ADMIN", "OWNER"})
     public void updateBusiness(@RequestBody Business biz, HttpServletResponse resp) {
         if (biz.getId() == null || biz.getId() == 0) {
             resp.setStatus(202);
@@ -155,7 +155,7 @@ public class BusinessController {
      */
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(path = "/id/{id}/posts")
-    @Secured(allowedRoles = {"OWNER"})
+    // @Secured(allowedRoles = {"OWNER"})
     public void addNewBusinessPost(@PathVariable int id, @RequestBody Post post) {
         Business biz = bizService.getBusinessById(id);
         post.setBusiness(biz);
@@ -172,7 +172,7 @@ public class BusinessController {
      * @param resp the HTTPServlet response
      */
     @PutMapping(path = "/id/{id}/posts")
-    @Secured(allowedRoles = {"OWNER"})
+    // @Secured(allowedRoles = {"OWNER"})
     public void updateBusinessPost(@PathVariable int id, @RequestBody Post post, HttpServletResponse resp) {
         Business biz = bizService.getBusinessById(id);
         post.setBusiness(biz);
@@ -274,7 +274,7 @@ public class BusinessController {
      */
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(path = "/id/{id}/reviews")
-    @Secured(allowedRoles = {"USER"})
+    // @Secured(allowedRoles = {"USER"})
     public void addNewBusinessReview (@RequestBody Review review, @PathVariable int id, HttpServletRequest req) {
         Business biz = bizService.getBusinessById(id);
         review.setBusiness(biz);
@@ -290,7 +290,7 @@ public class BusinessController {
      * @param resp the HTTPServletResponse object
      */
     @PutMapping(path = "/id/{id}/reviews")
-    @Secured(allowedRoles = {"USER"})
+    // @Secured(allowedRoles = {"USER"})
     public void updateBusinessReview (@RequestBody Review review, @PathVariable int id, HttpServletResponse resp) {
         Business biz = bizService.getBusinessById(id);
         review.setBusiness(biz);
