@@ -1,6 +1,22 @@
 package com.revature.web.controllers;
 
-import org.junit.Ignore;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import com.revature.models.Business;
+import com.revature.models.Role;
+import com.revature.models.User;
+import com.revature.repos.UserRepository;
+
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,21 +30,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.mockito.Mockito.when;
-
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-
-import com.revature.models.Business;
-import com.revature.models.Role;
-import com.revature.models.User;
-import com.revature.repos.UserRepository;
-import com.revature.util.aspects.SecurityAspect;
 
 
 @SpringBootTest
@@ -73,7 +74,9 @@ public class UserControllerIntegrationTest {
         bus.setEmail("fake email");
         bus.setBusinessType("petshop");
         
-        fullUser.setFavorites(List.of(bus));
+        List<Business> busList = new ArrayList<>();
+        busList.add(bus);
+        fullUser.setFavorites(busList);
 
         minUser = new User();
         minUser.setUserId(2);
@@ -83,7 +86,8 @@ public class UserControllerIntegrationTest {
         minUser.setLastName("l");
         minUser.setEmail("e@m.com");
 
-        list = List.of(fullUser, minUser);
+        list.add(fullUser);
+        list.add(minUser);
     }
 
     @AfterAll

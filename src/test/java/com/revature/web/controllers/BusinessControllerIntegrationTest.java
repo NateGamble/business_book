@@ -1,9 +1,14 @@
 package com.revature.web.controllers;
 
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,9 +37,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
@@ -121,9 +123,15 @@ public class BusinessControllerIntegrationTest {
         post.setBody("We're having a sale on all watermelon because they're gross");
 
         // Add review, hours and post to full business
-        fullBusiness.setReviews(List.of(review));
-        fullBusiness.setHours(List.of(hours));
-        fullBusiness.setPosts(List.of(post));
+        List<Review> reviewList = new ArrayList<>();
+        reviewList.add(review);
+        fullBusiness.setReviews(reviewList);
+        List<Hours> hoursList = new ArrayList<>();
+        hoursList.add(hours);
+        fullBusiness.setHours(hoursList);
+        List<Post> postList = new ArrayList<>();
+        postList.add(post);
+        fullBusiness.setPosts(postList);
 
         minBusiness = new Business();
         minBusiness.setId(2);
@@ -131,9 +139,12 @@ public class BusinessControllerIntegrationTest {
         minBusiness.setEmail("fake email");
         minBusiness.setBusinessType("petshop");
         
-        fullUser.setFavorites(List.of(minBusiness));
+        List<Business> favoritesList = new ArrayList<>();
+        favoritesList.add(minBusiness);
+        fullUser.setFavorites(favoritesList);
 
-        list = List.of(fullBusiness, minBusiness);
+        list.add(fullBusiness);
+        list.add(minBusiness);
     }
 
     @AfterAll
